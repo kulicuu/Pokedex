@@ -5,15 +5,16 @@ import { connect } from 'react-redux';
 const c = console.log.bind(console);
 
 
-class Species extends React.Component {
+class Locations extends React.Component {
     constructor(props) {
         super(props);
         this.state = {}
     }
+
     render() {
         return (
             <ul>
-                {Object.keys(this.props).map((specie, idx) => <li key={`species:${idx}`}> {specie} </li>)}
+                {Object.keys(this.props).map((location, idx) => <li key={`location:${idx}`}> { location } </li>)}
             </ul>
         )
     }
@@ -21,9 +22,9 @@ class Species extends React.Component {
 
 
 function mapStateToProps(state) {
-    let { species } = state.pokedex;
-    let props = Object.keys(species).reduce((acc, key, idx) => {
-        acc[key] = species[key];
+    let { locations } = state.pokedex;
+    let props = Object.keys(locations).reduce((acc, key, idx) => {
+        acc[key] = locations[key];
         return acc
     }, {});
     return props
@@ -35,4 +36,4 @@ function mapDispatchToProps(dispatch) {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(Species);
+export default connect(mapStateToProps, mapDispatchToProps)(Locations);

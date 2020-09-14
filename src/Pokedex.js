@@ -1,7 +1,14 @@
+
+
 import React from 'react';
 import logo from './logo.svg'
 import { connect } from 'react-redux';
-import Species from './Components/Species'
+import Species from './Components/Species';
+import Locations from './Components/Locations';
+import Abilities from './Components/Abilities';
+import Moves from './Components/Moves';
+import './Pokedex.css';
+
 
 const c = console.log.bind(console);
 
@@ -26,7 +33,13 @@ class Pokedex extends React.Component {
                     <img src={logo} className="App-logo" alt="logo" />
                 </header>
 
-                <Species/>
+
+                <div className="MainContainer">
+                    <Species className="Species"/>
+                    <Locations />
+                    <Abilities />
+                    <Moves />
+                </div>
             </div>
         )
     }

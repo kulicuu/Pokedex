@@ -24,7 +24,7 @@ function cursiveFetchAbilities(uri, store) {
     fetch(uri)
     .then(response => response.json())
     .then(data => {
-        store.dispatch({ type: DATA, payload: { dataType: "Abilities", data } });
+        store.dispatch({ type: DATA, payload: { dataType: "Abilities", data: data.results } });
         if (data.next) {
             // c('have next', data.next);
             cursiveFetchAbilities(data.next, store);
@@ -111,42 +111,42 @@ function cursiveFetchSpecies(url, store) {
 
 
 function initialize(store) {
-    // fetch("https://pokeapi.co/api/v2/generation/8")
-    // .then(response => response.json())
-    // .then(data => {
-    //     store.dispatch({ type: DATA, payload: { dataType: "Generation8", data } });
-    // })
+    fetch("https://pokeapi.co/api/v2/generation/8")
+    .then(response => response.json())
+    .then(data => {
+        store.dispatch({ type: DATA, payload: { dataType: "Generation8", data } });
+    })
 
-    // cursiveFetchAbilities("https://pokeapi.co/api/v2/ability", store);
-    // cursiveFetchEvolutionChains("https://pokeapi.co/api/v2/evolution-chain/", store);
+    cursiveFetchAbilities("https://pokeapi.co/api/v2/ability", store);
+    cursiveFetchEvolutionChains("https://pokeapi.co/api/v2/evolution-chain/", store);
 
-    // fetch("https://pokeapi.co/api/v2/pokemon-color/")
-    // .then(response => response.json())
-    // .then(data => {
-    //     store.dispatch({ type: DATA, payload: { dataType: "Colors", data } });
-    // });
+    fetch("https://pokeapi.co/api/v2/pokemon-color/")
+    .then(response => response.json())
+    .then(data => {
+        store.dispatch({ type: DATA, payload: { dataType: "Colors", data } });
+    });
 
-    // fetch("https://pokeapi.co/api/v2/evolution-trigger/")
-    // .then(response => response.json())
-    // .then(data => {
-    //     store.dispatch({ type: DATA, payload: { dataType: "EvolutionTrigger", data } });
-    // })
+    fetch("https://pokeapi.co/api/v2/evolution-trigger/")
+    .then(response => response.json())
+    .then(data => {
+        store.dispatch({ type: DATA, payload: { dataType: "EvolutionTrigger", data } });
+    })
 
-    // fetch("https://pokeapi.co/api/v2/gender/")
-    // .then(response => response.json())
-    // .then(data => {
-    //     c(data, 'data')
-    //     store.dispatch({ type: DATA, payload: { dataType: "Genders", data } });
-    // })
+    fetch("https://pokeapi.co/api/v2/gender/")
+    .then(response => response.json())
+    .then(data => {
+        c(data, 'data')
+        store.dispatch({ type: DATA, payload: { dataType: "Genders", data } });
+    })
 
-    // fetch("https://pokeapi.co/api/v2/location-area/")
-    // .then(response => response.json())
-    // .then(data => {
-    //     store.dispatch({ type: DATA, payload: { dataType: "LocationArea", data } });
-    // })
+    fetch("https://pokeapi.co/api/v2/location-area/")
+    .then(response => response.json())
+    .then(data => {
+        store.dispatch({ type: DATA, payload: { dataType: "LocationAreas", data } });
+    })
 
-    // cursiveFetchLocations("https://pokeapi.co/api/v2/location/", store);
-    // cursiveFetchMoves("https://pokeapi.co/api/v2/move/", store);
+    cursiveFetchLocations("https://pokeapi.co/api/v2/location/", store);
+    cursiveFetchMoves("https://pokeapi.co/api/v2/move/", store);
     cursiveFetchSpecies("https://pokeapi.co/api/v2/pokemon-species", store);
 }
 

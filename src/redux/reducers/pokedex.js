@@ -9,16 +9,16 @@ const initialState = {
 export default function(state = initialState, action) {
   // c(action, 'action');
   switch (action.type) {
-
       case DATA: {
-
           c(action.payload, 'data33434')
+          return {
+            ...state
+          }
       }
       case ACK_EFFECT: {
-          // c('hi88383')
           let effectsStack = state.effectsStack;
           delete effectsStack[action.payload]
-          c(effectsStack)
+          // c(effectsStack)
           return {
               ...state,
               effectsStack

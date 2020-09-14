@@ -8,10 +8,15 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          hey
+          hey  
         </p>
+        <input
+            type= "text"
+            placeholder= "Generation"
+        /> 
+        <input 
 
-
+        />
       </header>
     </div>
   );

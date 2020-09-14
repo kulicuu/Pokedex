@@ -3,22 +3,60 @@ const c = console.log.bind(console);
 const initialState = {
   effectsStack: {},
   allIds: [],
-  byIds: {}
+  byIds: {},
+  species: {}
 };
 
+
+
+
+
+
+
+
+
+
+
+
+function processInitialData(payload, state) {
+    let data = payload.data;
+    let dataType = payload.dataType;
+    switch (dataType) {
+        case "Species": {
+            let species = data.reduce((acc, value, id) => {
+                acc[value.name] = value;
+                return acc
+            }, state.species);
+            c(species, 'exited?')
+            return {
+                ...state,
+                species
+            }  
+        }
+        default:
+            return state;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
 export default function(state = initialState, action) {
-  // c(action, 'action');
+
   switch (action.type) {
       case DATA: {
-          c(action.payload, 'data33434')
-          return {
-            ...state
-          }
+          return processInitialData(action.payload, state);
       }
       case ACK_EFFECT: {
           let effectsStack = state.effectsStack;
           delete effectsStack[action.payload]
-          // c(effectsStack)
           return {
               ...state,
               effectsStack

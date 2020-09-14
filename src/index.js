@@ -6,7 +6,7 @@ import store from "./redux/store";
 
 
 import './index.css';
-import App from './App';
+import Pokedex from './Pokedex';
 import * as serviceWorker from './serviceWorker';
 import effects from './effects';
 
@@ -15,7 +15,7 @@ effects(store);
 
 ReactDOM.render(
     <Provider store={store}>
-        <App />
+        <Pokedex />
     </Provider>,
   document.getElementById('root')
 );

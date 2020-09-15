@@ -6,16 +6,18 @@ import { INITIALIZE, DATA, ACK_EFFECT, AUTOCOMPLETE_GENERATE } from "../redux/ac
 // import WebWorker from './WebWorkers/WebWorker';
 // import AutocompleteGenerateWorker from './WebWorkers/AutocompleteGenerateWorker';
 
-import workerize from 'workerize';
-import testWorker from './WebWorkers/testWorker'
 
-// const workerInstance = new WebWorker(AutocompleteGenerateWorker);
+import workerize from 'workerize';
+// import testWorker from './WebWorkers/testWorker'
+import AutocompleteGenerateWorker from './WebWorkers/AutocompleteGenerateWorker';
+
+
+const acgw = workerize(AutocompleteGenerateWorker);
+
 const c = console.log.bind(console);
 
-// const testWorkerString = testWorker.toString();
-// c(testWorkerString, 'testWorkerString');
-const effectsArq = {};
 
+const effectsArq = {};
 
 
 effectsArq.AUTOCOMPLETE_GENERATE = function (effect, store) {
@@ -35,44 +37,12 @@ effectsArq.INITIALIZE = function (effect, store) {
 
 function autocompleteGenerate(payload, store) {
     c('workers')
-
     if (window.Worker) {
-        c('yes')
-        // let worker = workerize(`    export function add(a, b) {
-        // // block for half a second to demonstrate asynchronicity
-        // let start = Date.now();
-
-        // while (Date.now()-start < 500);
-        // return a + b;
-        // }`);
-
-        // (async () => {
-        //     console.log('3 + 9 = ', await worker.add(3, 9));
-        // })();
-
-        // let worker = workerize(`export default function MyWorker(args) {
-        //             console.log('hello')
-        //             postMessage('howdy')
-        //             let onmessage = e => { // eslint-disable-line no-unused-vars
-        //                 // Write your code here...
-        //                 console.log('hello from worker');
-        //                 postMessage("Response");
-        //             };
-        //         }`);
-        // worker.onmessage = (e) => {
-        //     c('e', e)
-        // }
-        // worker.postMessage("hello")
-
-        let worker = workerize(testWorker);
-        worker.postMessage("yah")
-
-
-
+        acgw.postMessage("yah")
 
 
     } else {
-        c('no')
+        c('no worker')
     }
 
 }

@@ -3,11 +3,20 @@
 import { INITIALIZE, DATA, ACK_EFFECT, AUTOCOMPLETE_GENERATE } from "../redux/actionTypes";
 
 
+// import WebWorker from './WebWorkers/WebWorker';
+// import AutocompleteGenerateWorker from './WebWorkers/AutocompleteGenerateWorker';
+
+import workerize from 'workerize';
+import testWorker from './WebWorkers/testWorker'
+
+// const workerInstance = new WebWorker(AutocompleteGenerateWorker);
 const c = console.log.bind(console);
 
-
-
+// const testWorkerString = testWorker.toString();
+// c(testWorkerString, 'testWorkerString');
 const effectsArq = {};
+
+
 
 effectsArq.AUTOCOMPLETE_GENERATE = function (effect, store) {
     autocompleteGenerate(effect.payload, store);
@@ -26,6 +35,45 @@ effectsArq.INITIALIZE = function (effect, store) {
 
 function autocompleteGenerate(payload, store) {
     c('workers')
+
+    if (window.Worker) {
+        c('yes')
+        // let worker = workerize(`    export function add(a, b) {
+        // // block for half a second to demonstrate asynchronicity
+        // let start = Date.now();
+
+        // while (Date.now()-start < 500);
+        // return a + b;
+        // }`);
+
+        // (async () => {
+        //     console.log('3 + 9 = ', await worker.add(3, 9));
+        // })();
+
+        // let worker = workerize(`export default function MyWorker(args) {
+        //             console.log('hello')
+        //             postMessage('howdy')
+        //             let onmessage = e => { // eslint-disable-line no-unused-vars
+        //                 // Write your code here...
+        //                 console.log('hello from worker');
+        //                 postMessage("Response");
+        //             };
+        //         }`);
+        // worker.onmessage = (e) => {
+        //     c('e', e)
+        // }
+        // worker.postMessage("hello")
+
+        let worker = workerize(testWorker);
+        worker.postMessage("yah")
+
+
+
+
+
+    } else {
+        c('no')
+    }
 
 }
 
@@ -117,7 +165,7 @@ function cursiveFetchMoves(url, store) {
     })
 }
 
-
+var counter = 0;
 function cursiveFetchSpecies(url, store) {
     fetch(url)
     .then(response => response.json())
@@ -132,49 +180,49 @@ function cursiveFetchSpecies(url, store) {
         .then((arq) => {
             store.dispatch({ type: DATA, payload: { dataType: "Species", data: arq } })
         })
-        if (data.next) cursiveFetchSpecies(data.next, store);
+        if (data.next && counter++ < 2) cursiveFetchSpecies(data.next, store);
     })
 }
 
 
 function initialize(store) {
     
-    fetch("https://pokeapi.co/api/v2/generation/8")
-    .then(response => response.json())
-    .then(data => {
-        store.dispatch({ type: DATA, payload: { dataType: "Generation8", data } });
-    })
+    // fetch("https://pokeapi.co/api/v2/generation/8")
+    // .then(response => response.json())
+    // .then(data => {
+    //     store.dispatch({ type: DATA, payload: { dataType: "Generation8", data } });
+    // })
 
-    cursiveFetchAbilities("https://pokeapi.co/api/v2/ability", store);
-    cursiveFetchEvolutionChains("https://pokeapi.co/api/v2/evolution-chain/", store);
+    // cursiveFetchAbilities("https://pokeapi.co/api/v2/ability", store);
+    // cursiveFetchEvolutionChains("https://pokeapi.co/api/v2/evolution-chain/", store);
 
-    fetch("https://pokeapi.co/api/v2/pokemon-color/")
-    .then(response => response.json())
-    .then(data => {
-        store.dispatch({ type: DATA, payload: { dataType: "Colors", data } });
-    });
+    // fetch("https://pokeapi.co/api/v2/pokemon-color/")
+    // .then(response => response.json())
+    // .then(data => {
+    //     store.dispatch({ type: DATA, payload: { dataType: "Colors", data } });
+    // });
 
-    fetch("https://pokeapi.co/api/v2/evolution-trigger/")
-    .then(response => response.json())
-    .then(data => {
-        store.dispatch({ type: DATA, payload: { dataType: "EvolutionTrigger", data } });
-    })
+    // fetch("https://pokeapi.co/api/v2/evolution-trigger/")
+    // .then(response => response.json())
+    // .then(data => {
+    //     store.dispatch({ type: DATA, payload: { dataType: "EvolutionTrigger", data } });
+    // })
 
-    fetch("https://pokeapi.co/api/v2/gender/")
-    .then(response => response.json())
-    .then(data => {
-        c(data, 'data')
-        store.dispatch({ type: DATA, payload: { dataType: "Genders", data } });
-    })
+    // fetch("https://pokeapi.co/api/v2/gender/")
+    // .then(response => response.json())
+    // .then(data => {
+    //     c(data, 'data')
+    //     store.dispatch({ type: DATA, payload: { dataType: "Genders", data } });
+    // })
 
-    fetch("https://pokeapi.co/api/v2/location-area/")
-    .then(response => response.json())
-    .then(data => {
-        store.dispatch({ type: DATA, payload: { dataType: "LocationAreas", data } });
-    })
+    // fetch("https://pokeapi.co/api/v2/location-area/")
+    // .then(response => response.json())
+    // .then(data => {
+    //     store.dispatch({ type: DATA, payload: { dataType: "LocationAreas", data } });
+    // })
 
-    cursiveFetchLocations("https://pokeapi.co/api/v2/location/", store);
-    cursiveFetchMoves("https://pokeapi.co/api/v2/move/", store);
+    // cursiveFetchLocations("https://pokeapi.co/api/v2/location/", store);
+    // cursiveFetchMoves("https://pokeapi.co/api/v2/move/", store);
     cursiveFetchSpecies("https://pokeapi.co/api/v2/pokemon-species", store);
 }
 

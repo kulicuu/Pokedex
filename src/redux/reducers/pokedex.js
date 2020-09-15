@@ -1,7 +1,6 @@
 import { POKEDEX_CRITERIA, SET_FILTER, INITIALIZE, ACK_EFFECT, DATA, AUTOCOMPLETE_GENERATE } from "../actionTypes";
 const c = console.log.bind(console);
 const initialState = {
-  effectsStack: {},
   allIds: [],
   byIds: {},
   species: {},
@@ -10,6 +9,54 @@ const initialState = {
   moves: {},
   abilities: {},
 };
+
+
+
+
+const reducerArq = {};
+
+reducerArq.DATA = function(state, action, effectsQueue) {
+    state = processInitialData(action.payload, state);
+    effectsQueue.push({
+        type: AUTOCOMPLETE_GENERATE,
+        payload: action.payload
+    })
+    state = {
+        ...state,
+        effectsStack: { ...state.effectsStack, AUTOCOMPLETE_GENERATE: { payload: action.payload } }
+    }
+    // c(767, state.effectsStack)
+    return state
+}
+
+
+
+
+
+
+
+
+export default function PokedexPrecursor(effectsQueue) {
+    return function(state = initialState, action) {
+        if (Object.keys(reducerArq).includes(action.type)) {
+            return reducerArq[action.type](state, action, effectsQueue)
+        } else {
+            c("No-op in updates/reducers with type:", action.type);
+            return state
+        }
+    }
+
+
+}
+
+
+
+
+
+
+
+
+
 
 
 
@@ -86,81 +133,3 @@ function processInitialData(payload, state) {
             return state;
     }
 }
-
-
-
-
-
-
-
-
-
-export default function PokedexPrecursor(effectsQueue) {
-
-    return function(state = initialState, action) {
-    
-        switch (action.type) {
-            case DATA: {
-                state = processInitialData(action.payload, state);
-                state = {
-                    ...state,
-                    effectsStack: { ...state.effectsStack, AUTOCOMPLETE_GENERATE: { payload: action.payload } }
-                }
-                c(767, state.effectsStack)
-                return state
-            }
-            // case ACK_EFFECT: {
-            //     c(action.payload, 'akc effect')
-            //     let effectsStack = state.effectsStack;
-            //     delete effectsStack[action.payload]
-            //     return {
-            //         ...state,
-            //         effectsStack
-            //     }
-            // }
-            case INITIALIZE: {
-                return {
-                    ...state,
-                    effectsStack: { ...state.effectsStack, INITIALIZE: { } }
-                }
-            }
-            default: return state;
-        }
-    }
-}
-
-
-
-
-
-// export default function(state = initialState, action) {
-    
-//     switch (action.type) {
-//         case DATA: {
-//             state = processInitialData(action.payload, state);
-//             state = {
-//                 ...state,
-//                 effectsStack: { ...state.effectsStack, AUTOCOMPLETE_GENERATE: { payload: action.payload } }
-//             }
-//             c(767, state.effectsStack)
-//             return state
-
-//         }
-//         case ACK_EFFECT: {
-//             c(action.payload, 'akc effect')
-//             let effectsStack = state.effectsStack;
-//             delete effectsStack[action.payload]
-//             return {
-//                 ...state,
-//                 effectsStack
-//             }
-//         }
-//         case INITIALIZE: {
-//             return {
-//                 ...state,
-//                 effectsStack: { ...state.effectsStack, INITIALIZE: { } }
-//             }
-//         }
-//         default: return state;
-//     }
-// }

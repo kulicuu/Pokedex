@@ -1,4 +1,4 @@
-import { POKEDEX_CRITERIA, SET_FILTER, INITIALIZE, ACK_EFFECT, DATA } from "../actionTypes";
+import { POKEDEX_CRITERIA, SET_FILTER, INITIALIZE, ACK_EFFECT, DATA, AUTOCOMPLETE_GENERATE } from "../actionTypes";
 const c = console.log.bind(console);
 const initialState = {
   effectsStack: {},
@@ -22,7 +22,6 @@ function processInitialData(payload, state) {
                 acc[value.name] = value;
                 return acc
             }, state.species);
-            // c(species, 'exited?')
             return {
                 ...state,
                 species
@@ -96,56 +95,72 @@ function processInitialData(payload, state) {
 
 
 
+export default function PokedexPrecursor(effectsQueue) {
 
-
-export default function(state = initialState, action) {
-
-  switch (action.type) {
-      case DATA: {
-          return processInitialData(action.payload, state);
-      }
-      case ACK_EFFECT: {
-          let effectsStack = state.effectsStack;
-          delete effectsStack[action.payload]
-          return {
-              ...state,
-              effectsStack
-          }
-      }
-      case INITIALIZE: {
-          return {
-            ...state,
-            effectsStack: { ...state.effectsStack, INITIALIZE: { payload: null } }
-          }
-      }
-      case POKEDEX_CRITERIA: {
-        const { id, content } = action.payload;
-        return {
-          ...state,
-          allIds: [...state.allIds, id],
-          byIds: {
-            ...state.byIds,
-            [id]: {
-              content,
-              completed: false
+    return function(state = initialState, action) {
+    
+        switch (action.type) {
+            case DATA: {
+                state = processInitialData(action.payload, state);
+                state = {
+                    ...state,
+                    effectsStack: { ...state.effectsStack, AUTOCOMPLETE_GENERATE: { payload: action.payload } }
+                }
+                c(767, state.effectsStack)
+                return state
             }
-          }
-        };
-      }
-      case SET_FILTER: {
-        const { id } = action.payload;
-        return {
-          ...state,
-          byIds: {
-            ...state.byIds,
-            [id]: {
-              ...state.byIds[id],
-              completed: !state.byIds[id].completed
+            // case ACK_EFFECT: {
+            //     c(action.payload, 'akc effect')
+            //     let effectsStack = state.effectsStack;
+            //     delete effectsStack[action.payload]
+            //     return {
+            //         ...state,
+            //         effectsStack
+            //     }
+            // }
+            case INITIALIZE: {
+                return {
+                    ...state,
+                    effectsStack: { ...state.effectsStack, INITIALIZE: { } }
+                }
             }
-          }
-        };
-      }
-      default:
-        return state;
+            default: return state;
+        }
     }
 }
+
+
+
+
+
+// export default function(state = initialState, action) {
+    
+//     switch (action.type) {
+//         case DATA: {
+//             state = processInitialData(action.payload, state);
+//             state = {
+//                 ...state,
+//                 effectsStack: { ...state.effectsStack, AUTOCOMPLETE_GENERATE: { payload: action.payload } }
+//             }
+//             c(767, state.effectsStack)
+//             return state
+
+//         }
+//         case ACK_EFFECT: {
+//             c(action.payload, 'akc effect')
+//             let effectsStack = state.effectsStack;
+//             delete effectsStack[action.payload]
+//             return {
+//                 ...state,
+//                 effectsStack
+//             }
+//         }
+//         case INITIALIZE: {
+//             return {
+//                 ...state,
+//                 effectsStack: { ...state.effectsStack, INITIALIZE: { } }
+//             }
+//         }
+//         default: return state;
+//     }
+// }

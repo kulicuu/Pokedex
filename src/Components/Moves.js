@@ -13,7 +13,7 @@ class Moves extends React.Component {
     render() {
         return (
             <ul>
-                {Object.keys(this.props).map(move => <li> {move} </li>)}
+                {Object.keys(this.props).map((move, idx) => <li key={`move:${idx}`}> {move} </li>)}
             </ul>
         )
     }

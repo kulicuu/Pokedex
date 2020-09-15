@@ -1,4 +1,8 @@
 import { combineReducers } from "redux";
-import pokedex from "./pokedex";
+import pokedexPrecursor from "./pokedex";
 
-export default combineReducers({ pokedex });
+
+export default function rootReducerPrecursor (effectsQueue) {
+    let pokedex = pokedexPrecursor(effectsQueue)
+    return combineReducers({ pokedex });
+}

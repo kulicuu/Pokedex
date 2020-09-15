@@ -1,4 +1,9 @@
 import { createStore } from "redux";
-import rootReducer from "./reducers";
+import rootReducerPrecursor from "./reducers";
 
-export default createStore(rootReducer);
+
+export default function storePrecursor (effectsQueue) {
+    let rootReducer = rootReducerPrecursor(effectsQueue);
+    return createStore(rootReducer);
+
+}

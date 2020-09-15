@@ -24,9 +24,6 @@ class Pokedex extends React.Component {
 
 
     render() {
-
-
-        c(this.props.species, 'aeouau')
         return (
             <div className="App">
                 <header className="App-header">
@@ -47,8 +44,6 @@ class Pokedex extends React.Component {
 
 
 
-
-
 function mapStateToProps(state) {
     return {}
 }
@@ -56,10 +51,6 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
     return {}
 }
-
-
-
-
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(Pokedex);

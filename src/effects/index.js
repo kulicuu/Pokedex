@@ -1,22 +1,42 @@
 
 
-import { INITIALIZE, DATA, ACK_EFFECT } from "../redux/actionTypes";
+import { INITIALIZE, DATA, ACK_EFFECT, AUTOCOMPLETE_GENERATE } from "../redux/actionTypes";
 
 
 const c = console.log.bind(console);
 
 
-export default function(store) {
-    store.subscribe(trafficEffects);
-    store.dispatch({ type: INITIALIZE, payload: "0" });
-    function trafficEffects() {
-        // c(store.getState().pokedex.effectsStack, 'effectsStack');
-        let effectsStack = store.getState().pokedex.effectsStack;
-        Object.keys(effectsStack).map((effectType, idx) => {
-            store.dispatch({ type: ACK_EFFECT, payload: effectType });
-            effects(effectType, effectsStack[effectType], store);
-        });
+
+const effectsArq = {};
+
+effectsArq.AUTOCOMPLETE_GENERATE = function (effect, store) {
+    autocompleteGenerate(effect.payload, store);
+};
+
+
+var counter2 = 0;
+effectsArq.INITIALIZE = function (effect, store) {
+    c(counter2, `number of times we've called initialize`)
+    if (counter2++ < 1) {initialize(store)};
+};
+
+
+
+
+
+export default function effectsPrecursor(store) {
+    return function effects(effectsQueue) {
+        effectsQueue.map((effect, idx) => {
+            let eType = effect.type;
+            effectsQueue.splice(idx, 1);
+            if (Object.keys(effectsArq).includes(eType)) {
+                effectsArq[eType](effect, store);
+            } else {
+                c("no-op in effects with eType:", eType);
+            }
+        })
     }
+
 }
 
 
@@ -111,6 +131,7 @@ function cursiveFetchSpecies(url, store) {
 
 
 function initialize(store) {
+    
     fetch("https://pokeapi.co/api/v2/generation/8")
     .then(response => response.json())
     .then(data => {
@@ -151,11 +172,9 @@ function initialize(store) {
 }
 
 
+function autocompleteGenerate(payload, store) {
+    c('workers')
 
-function effects(effectType, effect, store) {
-    switch (effectType) {
-        case INITIALIZE: {
-            initialize(store);
-        }
-    }
 }
+
+

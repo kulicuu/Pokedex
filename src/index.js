@@ -2,15 +2,33 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import { Provider } from 'react-redux';
-import store from "./redux/store";
-
 
 import './index.css';
 import Pokedex from './Pokedex';
 import * as serviceWorker from './serviceWorker';
-import effects from './effects';
 
-effects(store);
+import effectsPrecursor from './effects';
+
+import storePrecursor from "./redux/store";
+
+var effectsQueue = [
+    {
+        type: "INITIALIZE"
+    }
+];
+
+
+
+
+const store = storePrecursor(effectsQueue);
+const effects = effectsPrecursor(store);
+
+function effectsTrigger() {
+    effects(effectsQueue);
+}
+
+store.subscribe(effectsTrigger);
+effects(effectsQueue);
 
 
 ReactDOM.render(

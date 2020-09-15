@@ -14,13 +14,20 @@ effectsArq.AUTOCOMPLETE_GENERATE = function (effect, store) {
 };
 
 
-var counter2 = 0;
 effectsArq.INITIALIZE = function (effect, store) {
-    c(counter2, `number of times we've called initialize`)
-    if (counter2++ < 1) {initialize(store)};
+    initialize(store);
 };
 
 
+
+
+
+
+
+function autocompleteGenerate(payload, store) {
+    c('workers')
+
+}
 
 
 
@@ -172,9 +179,5 @@ function initialize(store) {
 }
 
 
-function autocompleteGenerate(payload, store) {
-    c('workers')
-
-}
 
 

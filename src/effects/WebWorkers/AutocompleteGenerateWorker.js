@@ -2,13 +2,6 @@
 // I'm copying from my own work here:
 // https://github.com/kulicuu/graph_radar/blob/master/server-side/prefix_tree/worker_prefix_tree.coffee
 
-
-
-// Dev-Note:  It's going to go smoother if we wait for the full population
-// of a data set before sending it to be processed.  It is possible to do 
-// it in a streaming way with batches but unnecessarily complicated
-// for this application.
-
 export default function AutocompleteGenerateWorker(args) {
     const c = console.log.bind(console);
 
@@ -21,65 +14,22 @@ export default function AutocompleteGenerateWorker(args) {
                 candides.push(word);
             }
         }
-        // for this application i want to return all potential matches
         return candides;
-
-        // if (candides.length > 1) {
-        //     return breakTies({ candides })
-        // } else {
-        //     return candides.pop()
-        // }
-
-    }
-
-    function sendProgress({ percCount, jobId, tree }) {
-        postMessage({
-            type: 'progressUpdate',
-            payload: {
-                finished: true,
-                percCount,
-                jobId,
-                tree
-            }
-        })
     }
 
 
     function bulidTree (payload) {
-        let counter = 0;
-
-        c(payload)
-
-        let { dctnBlob, jobId, treeId } = payload;
-
-        // let rawRayy = dctnBlob.split('\n');
-        let rawRayy = dctnBlob; // sic, fix
-
-        let lenRawRayy = rawRayy.length
-
-        let percCount = lenRawRayy = 100;
-
+        let { dctnRayy, jobId, treeId } = payload;
         let tree = {
             chdNodes: {},
             prefix: ''
         }
-
-
-        for (let idx = 0; idx < dctnBlob.length; idx++) {
-            let word = dctnBlob[idx];
-            c(word, "on");
+        for (let idx = 0; idx < dctnRayy.length; idx++) {
+            let word = dctnRayy[idx];
+            c("buildTree on word:", word);
             let cursor = tree;
             let prefix = '';
             if (word.length >= 1) {
-                counter++;
-                let perc = counter / percCount;
-                // if (Math.floor(counter % percCount) === 0) {
-                //     sendProgress({
-                //         percCount: Math.floor(perc),
-                //         jobId,
-                //         treeId
-                //     })
-                // }
                 for (let jdx = 0; jdx < word.length; jdx++) {
                     let char = word[jdx];
                     prefix+= char;
@@ -87,7 +37,7 @@ export default function AutocompleteGenerateWorker(args) {
                         cursor.chdNodes[char] = {
                             matchWord: mapPrefixToMatch({
                                 prefix,
-                                dictionary: rawRayy,
+                                dictionary: dctnRayy,
                             }),
                             prefix,
                             chdNodes: {}
@@ -97,25 +47,16 @@ export default function AutocompleteGenerateWorker(args) {
                 }
             }
         }
-        // prefixTrees[treeId] = tree;
-        // c('tree is', tree);
-        c('done tree build');
-
-
+        c('Tree build finished.');
         return tree
     }
 
-
     const api = {}
 
-    const prefixTrees = {}
-
-
     api.Species = function (payload) {
-        c('hi', payload);
-        let dctnBlob = Object.keys(payload);
+        let dctnRayy = Object.keys(payload);
         let tree = bulidTree({
-            dctnBlob,
+            dctnRayy,
             jobId: "aaa",
             treeId: "bbb"
         })
@@ -126,13 +67,7 @@ export default function AutocompleteGenerateWorker(args) {
 
     }
 
-
-
-
-
-
     onmessage = e => {
-        // c(e.data)
         let { type, payload } = e.data;
         if (Object.keys(api).includes(type)) {
             api[type](payload);

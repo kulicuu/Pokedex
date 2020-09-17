@@ -5,6 +5,7 @@ const initialState = {
   byIds: {},
   species: {},
   locations: {},
+  filterTrees: {},
   locationAreas: {},
   moves: {},
   abilities: {},
@@ -16,13 +17,35 @@ const initialState = {
 const reducerArq = {};
 
 
+
+
+reducerArq.treeBuildComplete = function(state, action, effectsQueue) {
+    c("in treeBuildComplete with action", action.payload);
+    let {dataType, tree} = action.payload;
+    // state[`filterTrees:${dataType}`] = tree;
+    // c('state', state)
+    // return state
+
+
+    return {
+        ...state,
+        filterTrees: {
+            ...state.filterTrees,
+            [dataType]: tree
+        }
+    }
+
+
+}
+
+
 // Dev-Note:  It's going to go smoother if we wait for the full population
 // of a data set before sending it to be processed.  It is possible to do 
 // it in a streaming way with batches but unnecessarily complicated
 // for this application.
 
 reducerArq.DATA = function(state, action, effectsQueue) {
-    state = processInitialData(action.payload, state);
+    let newState = processInitialData(action.payload, state);
     if (action.payload.finished === true) {
         effectsQueue.push({
             type: AUTOCOMPLETE_GENERATE,
@@ -34,7 +57,7 @@ reducerArq.DATA = function(state, action, effectsQueue) {
     }
 
 
-    return state
+    return newState
 }
 
 

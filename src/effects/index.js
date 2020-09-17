@@ -2,13 +2,8 @@
 
 import { INITIALIZE, DATA, ACK_EFFECT, AUTOCOMPLETE_GENERATE } from "../redux/actionTypes";
 
-
-// import WebWorker from './WebWorkers/WebWorker';
-// import AutocompleteGenerateWorker from './WebWorkers/AutocompleteGenerateWorker';
-
-
 import workerize from 'workerize';
-// import testWorker from './WebWorkers/testWorker'
+
 import AutocompleteGenerateWorker from './WebWorkers/AutocompleteGenerateWorker';
 
 
@@ -34,7 +29,7 @@ effectsArq.INITIALIZE = function (effect, store) {
 const acgwResponseAPI = {};
 
 acgwResponseAPI.treeBuildComplete = function (payload, store) {
-    c('in tree build complete with payload:', payload);
+    // c('in tree build complete with payload:', payload);
     store.dispatch({
         type: "treeBuildComplete",
         payload

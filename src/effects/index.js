@@ -33,7 +33,12 @@ effectsArq.INITIALIZE = function (effect, store) {
 
 const acgwResponseAPI = {};
 
-acgwResponseAPI.treeBuildComplete = function () {
+acgwResponseAPI.treeBuildComplete = function (payload, store) {
+    c('in tree build complete with payload:', payload);
+    store.dispatch({
+        type: "treeBuildComplete",
+        payload
+    })
 
 }
 
@@ -43,6 +48,12 @@ if (window.Worker) {
 
     acgw.onmessage = (e) => {
         c('have message back', e.data)
+        let { type, payload } = e.data;
+        if (Object.keys(acgwResponseAPI).includes(type)) {
+            acgwResponseAPI[type](payload);
+        } else {
+            c("No-Op in acgwResponseAPI with type:", type);
+        }
     }
 }
 
@@ -52,6 +63,17 @@ if (window.Worker) {
 function autocompleteGenerate(payload, store) {
     // c('workers', payload)
     if (window.Worker) {
+
+        acgw.onmessage = (e) => {
+            c('have message back', e.data)
+            let { type, payload } = e.data;
+            if (Object.keys(acgwResponseAPI).includes(type)) {
+                acgwResponseAPI[type](payload, store);
+            } else {
+                c("No-Op in acgwResponseAPI with type:", type);
+            }
+        }
+
 
         acgw.postMessage(payload)
 
@@ -164,8 +186,8 @@ function cursiveFetchSpecies(url, store) {
         }))
         .then((arq) => {
             counter++;
-            // if (data.next && counter < 2) {
-            if (data.next) {
+            if (data.next && counter < 2) {
+            // if (data.next) {
                 store.dispatch({ 
                     type: DATA, payload: { 
                         dataType: "Species",
@@ -174,8 +196,8 @@ function cursiveFetchSpecies(url, store) {
                     } 
                 })
                 cursiveFetchSpecies(data.next, store);    
-            // } else if (counter===2) {
-            } else {
+            } else if (counter===2) {
+            // } else {
                 c('Species grab finished, worker should start processing.');
                 store.dispatch({ 
                     type: DATA, payload: { 

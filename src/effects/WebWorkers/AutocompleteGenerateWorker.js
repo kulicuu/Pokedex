@@ -36,6 +36,7 @@ export default function AutocompleteGenerateWorker(args) {
         postMessage({
             type: 'progressUpdate',
             payload: {
+                finished: true,
                 percCount,
                 jobId,
                 tree
@@ -96,15 +97,12 @@ export default function AutocompleteGenerateWorker(args) {
                 }
             }
         }
-        prefixTrees[treeId] = tree;
-        c('tree is', tree);
+        // prefixTrees[treeId] = tree;
+        // c('tree is', tree);
         c('done tree build');
-        sendProgress({
-            percCount: 100,
-            jobId,
-            treeId,
-            tree
-        })
+
+
+        return tree
     }
 
 
@@ -116,10 +114,14 @@ export default function AutocompleteGenerateWorker(args) {
     api.Species = function (payload) {
         c('hi', payload);
         let dctnBlob = Object.keys(payload);
-        bulidTree({
+        let tree = bulidTree({
             dctnBlob,
             jobId: "aaa",
             treeId: "bbb"
+        })
+        postMessage({
+            type: 'treeBuildComplete',
+            payload: { dataType: "Species", tree }
         })
 
     }

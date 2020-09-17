@@ -14,7 +14,7 @@ export default function AutocompleteGenerateWorker(args) {
                 candides.push(word);
             }
         }
-        return candides;
+        return candides[0];
     }
 
 

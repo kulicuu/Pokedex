@@ -20,17 +20,18 @@ class Species extends React.Component {
         return (
             <div className="Species">
                 <ul>
-                    {Object.keys(this.props).map((specie, idx) => <li key={`species:${idx}`}> {specie} </li>)}
+                    {Object.keys(this.props).map((specie, idx) => {
+                        if (specie !== 'filterTree') {
+                            return <li key={`species:${idx}`}> {specie} </li>
+                        }
+                    })}
                 </ul>
                 <input 
                     type="text"
                     onChange={(e) => {
                         c('changed', e.target.value);
-
                         let x = searchPrefixTree(e.target.value, this.props.filterTree);
-                        c(x, 'x')
-                        
-                        
+                        c(x, 'x') 
                     }}
                 />
             </div>
@@ -43,15 +44,14 @@ function mapStateToProps(state) {
     // c('mapping state to props', state.pokedex[`filterTrees:Species`])
     let { species } = state.pokedex;
     let props = Object.keys(species).reduce((acc, key, idx) => {
+        c(key, 'key');
         acc[key] = species[key];
         return acc
     }, {});
 
-    // return Object.assign({}, props, {
-    //     filterTree: state.pokedex.filterTreesSpecies
-    // })
 
     return { ...props, filterTree: state.pokedex.filterTrees.Species }
+    // return { species, filterTree: state.pokedex.filterTrees.Species }
 }
 
 

@@ -5,6 +5,7 @@ const initialState = {
   byIds: {},
   species: {},
   locations: {},
+  species: {},
   filterTrees: {},
   locationAreas: {},
   moves: {},

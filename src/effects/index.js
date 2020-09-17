@@ -1,14 +1,11 @@
 
 
 import { INITIALIZE, DATA, ACK_EFFECT, AUTOCOMPLETE_GENERATE } from "../redux/actionTypes";
-
 import workerize from 'workerize';
-
 import AutocompleteGenerateWorker from './WebWorkers/AutocompleteGenerateWorker';
 
 
 const acgw = workerize(AutocompleteGenerateWorker);
-
 const c = console.log.bind(console);
 
 
@@ -25,11 +22,10 @@ effectsArq.INITIALIZE = function (effect, store) {
 };
 
 
-
 const acgwResponseAPI = {};
 
+
 acgwResponseAPI.treeBuildComplete = function (payload, store) {
-    // c('in tree build complete with payload:', payload);
     store.dispatch({
         type: "treeBuildComplete",
         payload
@@ -39,8 +35,6 @@ acgwResponseAPI.treeBuildComplete = function (payload, store) {
 
 
 if (window.Worker) {
-    c('have worker at base');
-
     acgw.onmessage = (e) => {
         c('have message back', e.data)
         let { type, payload } = e.data;
@@ -53,12 +47,8 @@ if (window.Worker) {
 }
 
 
-
-
 function autocompleteGenerate(payload, store) {
-    // c('workers', payload)
     if (window.Worker) {
-
         acgw.onmessage = (e) => {
             c('have message back', e.data)
             let { type, payload } = e.data;
@@ -68,17 +58,11 @@ function autocompleteGenerate(payload, store) {
                 c("No-Op in acgwResponseAPI with type:", type);
             }
         }
-
-
         acgw.postMessage(payload)
-
-
     } else {
         c('no worker')
     }
-
 }
-
 
 
 export default function effectsPrecursor(store) {
@@ -129,7 +113,6 @@ function cursiveFetchEvolutionChains(url, store) {
 }
 
 
-
 function cursiveFetchLocations(url, store) {
     fetch(url)
     .then(response => response.json())
@@ -167,6 +150,7 @@ function cursiveFetchMoves(url, store) {
     })
 }
 
+
 var counter = 0;
 function cursiveFetchSpecies(url, store) {
     fetch(url)
@@ -182,6 +166,7 @@ function cursiveFetchSpecies(url, store) {
         .then((arq) => {
             counter++;
             if (data.next && counter < 2) {
+            // Development mode ^^
             // if (data.next) {
                 store.dispatch({ 
                     type: DATA, payload: { 
@@ -192,8 +177,8 @@ function cursiveFetchSpecies(url, store) {
                 })
                 cursiveFetchSpecies(data.next, store);    
             } else if (counter===2) {
+            // Development mode ^^
             // } else {
-                c('Species grab finished, worker should start processing.');
                 store.dispatch({ 
                     type: DATA, payload: { 
                         dataType: "Species",
@@ -201,14 +186,15 @@ function cursiveFetchSpecies(url, store) {
                         data: arq 
                     } 
                 })
-            }
-            
+            } 
         })
     })
 }
 
 
 function initialize(store) {
+
+    // DEVELOPMENT MODE comments this 
     
     // fetch("https://pokeapi.co/api/v2/generation/8")
     // .then(response => response.json())

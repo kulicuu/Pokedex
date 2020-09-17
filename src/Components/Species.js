@@ -9,14 +9,15 @@ const _ = require('lodash');
 class Species extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {}
+        this.state = {
+            filteredSpecies: []
+        }
     }
 
     componentWillReceiveProps() {
         return true
     }
     render() {
-        c('rendering', this.props)
         return (
             <div className="Species">
                 <ul>
@@ -29,11 +30,16 @@ class Species extends React.Component {
                 <input 
                     type="text"
                     onChange={(e) => {
-                        c('changed', e.target.value);
-                        let x = searchPrefixTree(e.target.value, this.props.filterTree);
-                        c(x, 'x') 
+                        this.setState({
+                            filteredSpecies: searchPrefixTree(e.target.value, this.props.filterTree)
+                        })
                     }}
                 />
+                <ul>
+                    {this.state.filteredSpecies.map((specie, idx) => {
+                        return <li key={`filteredSpecies:${idx}`}> {specie} </li>
+                    })}
+                </ul>
             </div>
         )
     }
@@ -41,17 +47,12 @@ class Species extends React.Component {
 
 
 function mapStateToProps(state) {
-    // c('mapping state to props', state.pokedex[`filterTrees:Species`])
     let { species } = state.pokedex;
     let props = Object.keys(species).reduce((acc, key, idx) => {
-        c(key, 'key');
         acc[key] = species[key];
         return acc
     }, {});
-
-
     return { ...props, filterTree: state.pokedex.filterTrees.Species }
-    // return { species, filterTree: state.pokedex.filterTrees.Species }
 }
 
 
@@ -66,18 +67,15 @@ function reduceTree(acc, tree) {
     }
     return _.reduce(tree.chdNodes, (acc2, node, prefix) => {
         return reduceTree(acc2, node)
-
     }, acc);
 }
 
+
 function searchPrefixTree(prefix, filterTree) {
-    c(filterTree, 'filterTree')
     if (prefix.length === 0) {
         return []
     } else {
-        c('else')
         let cursor = filterTree;
-        c(cursor, 'cursor')
         let cancelled = false;
         if (cursor) {
             let prefixRayy = prefix.split('')

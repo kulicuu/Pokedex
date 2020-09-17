@@ -82,16 +82,6 @@ export default function PokedexPrecursor(effectsQueue) {
 }
 
 
-
-
-
-
-
-
-
-
-
-
 function processInitialData(payload, state) {
     let data = payload.data;
     let dataType = payload.dataType;

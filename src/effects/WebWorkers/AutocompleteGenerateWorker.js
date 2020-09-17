@@ -26,7 +26,7 @@ export default function AutocompleteGenerateWorker(args) {
         }
         for (let idx = 0; idx < dctnRayy.length; idx++) {
             let word = dctnRayy[idx];
-            c("buildTree on word:", word);
+            // c("buildTree on word:", word);
             let cursor = tree;
             let prefix = '';
             if (word.length >= 1) {

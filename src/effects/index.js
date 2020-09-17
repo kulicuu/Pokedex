@@ -26,6 +26,7 @@ const acgwResponseAPI = {};
 
 
 acgwResponseAPI.treeBuildComplete = function (payload, store) {
+    c("build tree complete")
     store.dispatch({
         type: "treeBuildComplete",
         payload
@@ -36,7 +37,6 @@ acgwResponseAPI.treeBuildComplete = function (payload, store) {
 
 if (window.Worker) {
     acgw.onmessage = (e) => {
-        c('have message back', e.data)
         let { type, payload } = e.data;
         if (Object.keys(acgwResponseAPI).includes(type)) {
             acgwResponseAPI[type](payload);
@@ -50,7 +50,6 @@ if (window.Worker) {
 function autocompleteGenerate(payload, store) {
     if (window.Worker) {
         acgw.onmessage = (e) => {
-            c('have message back', e.data)
             let { type, payload } = e.data;
             if (Object.keys(acgwResponseAPI).includes(type)) {
                 acgwResponseAPI[type](payload, store);
@@ -165,8 +164,8 @@ function cursiveFetchSpecies(url, store) {
         }))
         .then((arq) => {
             counter++;
-            if (data.next && counter < 2) {
-            // Development mode ^^
+            if (data.next && counter < 10) {
+            // Development mode ^^ to limit API usage
             // if (data.next) {
                 store.dispatch({ 
                     type: DATA, payload: { 
@@ -176,7 +175,7 @@ function cursiveFetchSpecies(url, store) {
                     } 
                 })
                 cursiveFetchSpecies(data.next, store);    
-            } else if (counter===2) {
+            } else if (counter===10) {
             // Development mode ^^
             // } else {
                 store.dispatch({ 
@@ -194,7 +193,7 @@ function cursiveFetchSpecies(url, store) {
 
 function initialize(store) {
 
-    // DEVELOPMENT MODE comments this 
+    // DEVELOPMENT MODE comment this to avoid bombarding the API endpoint:
     
     // fetch("https://pokeapi.co/api/v2/generation/8")
     // .then(response => response.json())
@@ -232,6 +231,8 @@ function initialize(store) {
 
     // cursiveFetchLocations("https://pokeapi.co/api/v2/location/", store);
     // cursiveFetchMoves("https://pokeapi.co/api/v2/move/", store);
+
+
     cursiveFetchSpecies("https://pokeapi.co/api/v2/pokemon-species", store);
 }
 

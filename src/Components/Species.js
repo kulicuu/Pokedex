@@ -6,6 +6,19 @@ const c = console.log.bind(console);
 const _ = require('lodash');
 
 
+
+const fragments = function() {
+    return (
+        <ul>
+            {Object.keys(this.props).map((specie, idx) => {
+                if (specie !== 'filterTree') {
+                    return <li key={`species:${idx}`}> {specie} </li>
+                }
+            })}
+        </ul>
+    )
+}
+
 class Species extends React.Component {
     constructor(props) {
         super(props);
@@ -14,22 +27,15 @@ class Species extends React.Component {
         }
     }
 
-    componentWillReceiveProps() {
-        return true
-    }
     render() {
+        let filterTreeLoading = this.props.filterTree === undefined;
         return (
             <div className="Species">
-                <ul>
-                    {Object.keys(this.props).map((specie, idx) => {
-                        if (specie !== 'filterTree') {
-                            return <li key={`species:${idx}`}> {specie} </li>
-                        }
-                    })}
-                </ul>
                 <input 
+                    disabled={filterTreeLoading}
                     type="text"
-                    onChange={(e) => {
+                    placeholder="Species"
+                    onChange= {(e) => {
                         this.setState({
                             filteredSpecies: searchPrefixTree(e.target.value, this.props.filterTree)
                         })

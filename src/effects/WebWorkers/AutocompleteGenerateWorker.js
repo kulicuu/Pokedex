@@ -57,8 +57,6 @@ export default function AutocompleteGenerateWorker(args) {
         let dctnRayy = Object.keys(payload);
         let tree = bulidTree({
             dctnRayy,
-            jobId: "aaa",
-            treeId: "bbb"
         })
         postMessage({
             type: 'treeBuildComplete',

@@ -1,3 +1,5 @@
+
+
 import { POKEDEX_CRITERIA, SET_FILTER, INITIALIZE, ACK_EFFECT, DATA, AUTOCOMPLETE_GENERATE } from "../actionTypes";
 const c = console.log.bind(console);
 const initialState = {
@@ -13,11 +15,7 @@ const initialState = {
 };
 
 
-
-
 const reducerArq = {};
-
-
 
 
 reducerArq.treeBuildComplete = function(state, action, effectsQueue) {
@@ -35,8 +33,6 @@ reducerArq.treeBuildComplete = function(state, action, effectsQueue) {
             [dataType]: tree
         }
     }
-
-
 }
 
 
@@ -56,16 +52,8 @@ reducerArq.DATA = function(state, action, effectsQueue) {
             }
         })
     }
-
-
     return newState
 }
-
-
-
-
-
-
 
 
 export default function PokedexPrecursor(effectsQueue) {

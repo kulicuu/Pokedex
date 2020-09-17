@@ -16,10 +16,7 @@ const c = console.log.bind(console);
 class Pokedex extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-        }
-
-
+        this.state = {}
     }
 
 
@@ -39,7 +36,6 @@ class Pokedex extends React.Component {
         )
     }
 }
-
 
 
 function mapStateToProps(state) {

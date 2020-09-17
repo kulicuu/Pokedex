@@ -15,17 +15,25 @@ const initialState = {
 
 const reducerArq = {};
 
+
+// Dev-Note:  It's going to go smoother if we wait for the full population
+// of a data set before sending it to be processed.  It is possible to do 
+// it in a streaming way with batches but unnecessarily complicated
+// for this application.
+
 reducerArq.DATA = function(state, action, effectsQueue) {
     state = processInitialData(action.payload, state);
-    effectsQueue.push({
-        type: AUTOCOMPLETE_GENERATE,
-        payload: action.payload
-    })
-    state = {
-        ...state,
-        effectsStack: { ...state.effectsStack, AUTOCOMPLETE_GENERATE: { payload: action.payload } }
+    if (action.payload.finished === true) {
+        effectsQueue.push({
+            type: AUTOCOMPLETE_GENERATE,
+            payload: {
+                type: "Species",
+                payload: state.species
+            }
+        })
     }
-    // c(767, state.effectsStack)
+
+
     return state
 }
 

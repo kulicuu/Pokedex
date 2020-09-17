@@ -31,14 +31,29 @@ effectsArq.INITIALIZE = function (effect, store) {
 
 
 
+const acgwResponseAPI = {};
+
+acgwResponseAPI.treeBuildComplete = function () {
+
+}
+
+
+if (window.Worker) {
+    c('have worker at base');
+
+    acgw.onmessage = (e) => {
+        c('have message back', e.data)
+    }
+}
 
 
 
 
 function autocompleteGenerate(payload, store) {
-    c('workers')
+    // c('workers', payload)
     if (window.Worker) {
-        acgw.postMessage("yah")
+
+        acgw.postMessage(payload)
 
 
     } else {
@@ -148,9 +163,30 @@ function cursiveFetchSpecies(url, store) {
             })
         }))
         .then((arq) => {
-            store.dispatch({ type: DATA, payload: { dataType: "Species", data: arq } })
+            counter++;
+            // if (data.next && counter < 2) {
+            if (data.next) {
+                store.dispatch({ 
+                    type: DATA, payload: { 
+                        dataType: "Species",
+                        finished: false,
+                        data: arq 
+                    } 
+                })
+                cursiveFetchSpecies(data.next, store);    
+            // } else if (counter===2) {
+            } else {
+                c('Species grab finished, worker should start processing.');
+                store.dispatch({ 
+                    type: DATA, payload: { 
+                        dataType: "Species",
+                        finished: true,
+                        data: arq 
+                    } 
+                })
+            }
+            
         })
-        if (data.next && counter++ < 2) cursiveFetchSpecies(data.next, store);
     })
 }
 

@@ -3,23 +3,12 @@ import { connect } from 'react-redux';
 import './Species.css';
 import Card from './Card';
 import UmbraCard from './UmbraCard';
+import UmbraSet from './UmbraSet';
 
 const c = console.log.bind(console);
 const _ = require('lodash');
 
 
-
-const fragments = function() {
-    return (
-        <ul>
-            {Object.keys(this.props).map((specie, idx) => {
-                if (specie !== 'filterTree') {
-                    return <li key={`species:${idx}`}> {specie} </li>
-                }
-            })}
-        </ul>
-    )
-}
 
 class Species extends React.Component {
     constructor(props) {
@@ -33,40 +22,37 @@ class Species extends React.Component {
         let filterTreeLoading = this.props.filterTree === undefined;
         return (
             <div className="Species">
+                <div className='ContainerFour'>
                 <p> Species </p>
-                <input
-                    disabled={filterTreeLoading}
-                    type="text"
-                    placeholder="Species"
-                    onChange= {(e) => {
-                        this.setState({
-                            filteredSpecies: searchPrefixTree(e.target.value, this.props.filterTree)
-                        })
-                    }}
-                />
-                
-               {                    
-                filterTreeLoading?
-                    Object.keys(this.props).map((specie, idx) => {
-                        if (specie !== 'filterTree' && specie !=='className') {
-                            return <UmbraCard
-                                key={`umbraSpecies:${idx}`}
-                                specie={specie}
-                                idx={idx}
-                            />
-                        } else { return false }
-
-                    })
-                :
-                    this.state.filteredSpecies.map((specie, idx) => {
-                        return <Card 
-                            key={`filteredSpecies:${idx}`}
-                            specie={specie}
+                <div className='ContainerThree'>
+                    <UmbraSet/>
+                    <div className='inputContainer'>
+                        <input
+                            disabled={filterTreeLoading}
+                            type="text"
+                            placeholder="Species"
+                            onChange= {(e) => {
+                                this.setState({
+                                    filteredSpecies: searchPrefixTree(e.target.value, this.props.filterTree)
+                                })
+                            }}
                         />
-                    })
-                }
+                    </div>
 
-                
+                </div>  
+
+                   {                    
+                    filterTreeLoading?
+                        false
+                    :
+                        this.state.filteredSpecies.map((specie, idx) => {
+                            return <Card 
+                                key={`filteredSpecies:${idx}`}
+                                specie={specie}
+                            />
+                        })
+                    }   
+                </div>
             </div>
         )
     }
@@ -74,12 +60,8 @@ class Species extends React.Component {
 
 
 function mapStateToProps(state) {
-    let { species } = state.pokedex;
-    let props = Object.keys(species).reduce((acc, key, idx) => {
-        acc[key] = species[key];
-        return acc
-    }, {});
-    return { ...props, filterTree: state.pokedex.filterTrees.Species }
+
+    return  {filterTree: state.pokedex.filterTrees.Species }
 }
 
 

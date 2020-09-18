@@ -4,16 +4,41 @@
 
 .Species {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-content: center;
     justify-content: center;
     align-items: center;
     background-color: ivory;
-    margin-top: 40%;
-    width: 600px;
-    height: 600px;
+    width: 1000px;
+    height: 1000px;
+    margin-top: 100px;
+
 }
 
+.ContainerThree {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+
+}
+
+.inputContainer {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    min-width: 300px;
+    max-height: 200px;
+    background-color: lightyellow;
+
+}
+
+.ContainerFour {
+    /*margin-top: 100px;*/
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    align-items: center;
+}
 
 .Species input {
     height: 30px;
@@ -24,5 +49,7 @@
     width: 70px;
     height: 30px;
     background-color: snow;
+    border: 1px solid cyan;
 
 }
+

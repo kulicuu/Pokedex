@@ -22,17 +22,12 @@ class Pokedex extends React.Component {
 
     render() {
         return (
-            <div className="App">
-                <header className="App-header">
-                    <img src={logo} className="App-logo" alt="logo" />
-                </header>
+
                 <div className="MainContainer">
                     <Species className="Species"/>
-{/*                    <Locations />
-                    <Abilities className="Abilities" />
-                    <Moves />*/}
+
                 </div>
-            </div>
+
         )
     }
 }

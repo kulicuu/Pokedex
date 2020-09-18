@@ -29,7 +29,7 @@ class Pokedex extends React.Component {
                 <div className="MainContainer">
                     <Species className="Species"/>
                     <Locations />
-                    <Abilities />
+                    <Abilities className="Abilities" />
                     <Moves />
                 </div>
             </div>

@@ -2,7 +2,10 @@
 
 
 
-.Species {
+
+
+
+.Abilities {
     display: flex;
     flex-direction: row;
     background-color: ivory;

@@ -8,10 +8,12 @@ body {
     flex-direction: row;
     align-items: center;
     justify-content: center;
+    height: 400px;
 }
 
 .App {
   text-align: center;
+
 }
 
 .App-logo {

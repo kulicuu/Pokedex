@@ -13,7 +13,21 @@ const effectsArq = {};
 
 
 effectsArq.AUTOCOMPLETE_GENERATE = function (effect, store) {
-    autocompleteGenerate(effect.payload, store);
+    let { type, payload } = effect;
+    c('payload in effect', payload)
+    if (window.Worker) {
+        acgw.onmessage = (e) => {
+            let { type, payload } = e.data;
+            if (Object.keys(acgwResponseAPI).includes(type)) {
+                acgwResponseAPI[type](payload, store);
+            } else {
+                c("No-Op in acgwResponseAPI with type:", type);
+            }
+        }
+        acgw.postMessage(payload)
+    } else {
+        c('no worker')
+    }
 };
 
 
@@ -47,27 +61,13 @@ if (window.Worker) {
 }
 
 
-function autocompleteGenerate(payload, store) {
-    if (window.Worker) {
-        acgw.onmessage = (e) => {
-            let { type, payload } = e.data;
-            if (Object.keys(acgwResponseAPI).includes(type)) {
-                acgwResponseAPI[type](payload, store);
-            } else {
-                c("No-Op in acgwResponseAPI with type:", type);
-            }
-        }
-        acgw.postMessage(payload)
-    } else {
-        c('no worker')
-    }
-}
 
 
 export default function effectsPrecursor(store) {
     return function effects(effectsQueue) {
         effectsQueue.map((effect, idx) => {
             let eType = effect.type;
+            c('effect in main effect function', effect)
             effectsQueue.splice(idx, 1);
             if (Object.keys(effectsArq).includes(eType)) {
                 effectsArq[eType](effect, store);
@@ -80,15 +80,39 @@ export default function effectsPrecursor(store) {
 }
 
 
-function cursiveFetchAbilities(uri, store) {
-    fetch(uri)
+function cursiveFetchAbilities(url, store) {
+    fetch(url)
     .then(response => response.json())
     .then(data => {
-        store.dispatch({ type: DATA, payload: { dataType: "Abilities", data: data.results } });
-        if (data.next) {
-            // c('have next', data.next);
-            cursiveFetchAbilities(data.next, store);
-        }
+        Promise.all(data.results.map((value) => {
+            return new Promise((resolve, reject) => {
+                fetch(value.url)
+                .then(response2 => response2.json())
+                .then(data => resolve(data))
+            })
+        }))
+        .then((arq) => {
+            if (data.next) {
+                store.dispatch({
+                    type: DATA,
+                    payload: {
+                        dataType: "Abilities",
+                        finished: false,
+                        data: arq
+                    }
+                })
+                cursiveFetchAbilities(data.next, store);
+            } else {
+                store.dispatch({
+                    type: DATA,
+                    payload: {
+                        dataType: "Abilities",
+                        finished: true,
+                        data: arq
+                    }
+                })
+            }
+        }) 
     })
 }
 
@@ -168,7 +192,8 @@ function cursiveFetchSpecies(url, store) {
             // Development mode ^^ to limit API usage
             // if (data.next) {
                 store.dispatch({ 
-                    type: DATA, payload: { 
+                    type: DATA, 
+                    payload: { 
                         dataType: "Species",
                         finished: false,
                         data: arq 
@@ -179,7 +204,8 @@ function cursiveFetchSpecies(url, store) {
             // Development mode ^^
             // } else {
                 store.dispatch({ 
-                    type: DATA, payload: { 
+                    type: DATA, 
+                    payload: { 
                         dataType: "Species",
                         finished: true,
                         data: arq 
@@ -201,8 +227,7 @@ function initialize(store) {
     //     store.dispatch({ type: DATA, payload: { dataType: "Generation8", data } });
     // })
 
-    // cursiveFetchAbilities("https://pokeapi.co/api/v2/ability", store);
-    // cursiveFetchEvolutionChains("https://pokeapi.co/api/v2/evolution-chain/", store);
+    
 
     // fetch("https://pokeapi.co/api/v2/pokemon-color/")
     // .then(response => response.json())
@@ -233,7 +258,10 @@ function initialize(store) {
     // cursiveFetchMoves("https://pokeapi.co/api/v2/move/", store);
 
 
-    cursiveFetchSpecies("https://pokeapi.co/api/v2/pokemon-species", store);
+
+    cursiveFetchAbilities("https://pokeapi.co/api/v2/ability", store);
+    // cursiveFetchEvolutionChains("https://pokeapi.co/api/v2/evolution-chain/", store);
+    // cursiveFetchSpecies("https://pokeapi.co/api/v2/pokemon-species", store);
 }
 
 

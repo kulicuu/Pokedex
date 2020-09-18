@@ -53,24 +53,30 @@ export default function AutocompleteGenerateWorker(args) {
 
     const api = {}
 
-    api.Species = function (payload) {
-        let dctnRayy = Object.keys(payload);
+
+    api.autocompleteTreeBuild = function (payload) {
+        // c(payload, 'payload')
+        let { dataType, data } = payload
+        let dctnRayy = Object.keys(data);
         let tree = bulidTree({
             dctnRayy,
         })
         postMessage({
             type: 'treeBuildComplete',
-            payload: { dataType: "Species", tree }
+            payload: { dataType, tree }
         })
-
     }
 
     onmessage = e => {
         let { type, payload } = e.data;
-        if (Object.keys(api).includes(type)) {
-            api[type](payload);
-        } else {
-            c("no-op in AutocompleteGenerateWorker with type", type);
-        }
+        api.autocompleteTreeBuild(payload);
+
+
+        // if (Object.keys(api).includes(type)) {
+        //     // kludge
+        //     api.autocompleteTreeBuild(payload);
+        // } else {
+        //     c("no-op in AutocompleteGenerateWorker with type", type);
+        // }
     };
 }

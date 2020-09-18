@@ -18,6 +18,13 @@ const initialState = {
 const reducerArq = {};
 
 
+const kludgeMap = {
+    Species: 'species',
+    Abilities: 'abilities',
+    Moves: 'moves'
+}
+
+
 reducerArq.treeBuildComplete = function(state, action, effectsQueue) {
     c("in treeBuildComplete with action", action.payload);
     let {dataType, tree} = action.payload;
@@ -42,13 +49,17 @@ reducerArq.treeBuildComplete = function(state, action, effectsQueue) {
 // for this application.
 
 reducerArq.DATA = function(state, action, effectsQueue) {
+    let { dataType } = action.payload;
     let newState = processInitialData(action.payload, state);
     if (action.payload.finished === true) {
         effectsQueue.push({
             type: AUTOCOMPLETE_GENERATE,
             payload: {
-                type: "Species",
-                payload: state.species
+                type: 'autocompleteTreeBuild',
+                payload: {
+                    dataType,
+                    data: state[kludgeMap[dataType]]
+                }
             }
         })
     }

@@ -12,6 +12,8 @@ const c = console.log.bind(console);
 const effectsArq = {};
 
 
+
+
 effectsArq.AUTOCOMPLETE_GENERATE = function (effect, store) {
     let { type, payload } = effect;
     c('payload in effect', payload)
@@ -32,7 +34,48 @@ effectsArq.AUTOCOMPLETE_GENERATE = function (effect, store) {
 
 
 effectsArq.INITIALIZE = function (effect, store) {
-    initialize(store);
+
+    // DEVELOPMENT MODE comment this to avoid bombarding the API endpoint:
+    
+    // fetch("https://pokeapi.co/api/v2/generation/8")
+    // .then(response => response.json())
+    // .then(data => {
+    //     store.dispatch({ type: DATA, payload: { dataType: "Generation8", data } });
+    // })
+
+    
+    // fetch("https://pokeapi.co/api/v2/pokemon-color/")
+    // .then(response => response.json())
+    // .then(data => {
+    //     store.dispatch({ type: DATA, payload: { dataType: "Colors", data } });
+    // });
+
+    // fetch("https://pokeapi.co/api/v2/evolution-trigger/")
+    // .then(response => response.json())
+    // .then(data => {
+    //     store.dispatch({ type: DATA, payload: { dataType: "EvolutionTrigger", data } });
+    // })
+
+    // fetch("https://pokeapi.co/api/v2/gender/")
+    // .then(response => response.json())
+    // .then(data => {
+    //     c(data, 'data')
+    //     store.dispatch({ type: DATA, payload: { dataType: "Genders", data } });
+    // })
+
+    // fetch("https://pokeapi.co/api/v2/location-area/")
+    // .then(response => response.json())
+    // .then(data => {
+    //     store.dispatch({ type: DATA, payload: { dataType: "LocationAreas", data } });
+    // })
+
+    // cursiveFetchLocations("https://pokeapi.co/api/v2/location/", store);
+    cursiveFetchMoves("https://pokeapi.co/api/v2/move/", store);
+
+    // cursiveFetchAbilities("https://pokeapi.co/api/v2/ability", store);
+    // cursiveFetchEvolutionChains("https://pokeapi.co/api/v2/evolution-chain/", store);
+    // cursiveFetchSpecies("https://pokeapi.co/api/v2/pokemon-species", store);
+
 };
 
 
@@ -40,7 +83,7 @@ const acgwResponseAPI = {};
 
 
 acgwResponseAPI.treeBuildComplete = function (payload, store) {
-    c("build tree complete")
+    // c("build tree complete")
     store.dispatch({
         type: "treeBuildComplete",
         payload
@@ -79,7 +122,7 @@ export default function effectsPrecursor(store) {
 
 }
 
-
+var devCounterAbilities = 0
 function cursiveFetchAbilities(url, store) {
     fetch(url)
     .then(response => response.json())
@@ -135,7 +178,7 @@ function cursiveFetchEvolutionChains(url, store) {
     })
 }
 
-
+var devCounterLocations = 0;
 function cursiveFetchLocations(url, store) {
     fetch(url)
     .then(response => response.json())
@@ -148,13 +191,32 @@ function cursiveFetchLocations(url, store) {
             })
         }))
         .then((arq) => {
-            store.dispatch({ type: DATA, payload: { dataType: "Locations", data: arq } })
-        })
-        if (data.next) cursiveFetchLocations(data.next, store);
+            if (data.next) {
+                store.dispatch({
+                    type: DATA,
+                    payload: {
+                        dataType: "Locations",
+                        finished: false,
+                        data: arq
+                    }
+                })
+                cursiveFetchLocations(data.next, store);
+            } else {
+                store.dispatch({
+                    type: DATA,
+                    payload: {
+                        dataType: "Locations",
+                        finished: true,
+                        data: arq
+                    }
+                })
+            }
+        }) 
     })
 }
 
 
+var devCounterMoves = 0;
 function cursiveFetchMoves(url, store) {
     fetch(url)
     .then(response => response.json())
@@ -167,14 +229,34 @@ function cursiveFetchMoves(url, store) {
             })
         }))
         .then((arq) => {
-            store.dispatch({ type: DATA, payload: { dataType: "Moves", data: arq } })
-        })
-        if (data.next) cursiveFetchMoves(data.next, store);
+            devCounterMoves++;
+            if (data.next && devCounterMoves < 10) {
+            // if (data.next) {
+                store.dispatch({
+                    type: DATA,
+                    payload: {
+                        dataType: "Moves",
+                        finished: false,
+                        data: arq
+                    }
+                })
+                cursiveFetchMoves(data.next, store);
+            // } else {
+            } else if (devCounterMoves===10) {
+                store.dispatch({
+                    type: DATA,
+                    payload: {
+                        dataType: "Moves",
+                        finished: true,
+                        data: arq
+                    }
+                })
+            }
+        }) 
     })
 }
 
-
-var counter = 0;
+var devCounterSpecies = 0;
 function cursiveFetchSpecies(url, store) {
     fetch(url)
     .then(response => response.json())
@@ -187,8 +269,8 @@ function cursiveFetchSpecies(url, store) {
             })
         }))
         .then((arq) => {
-            counter++;
-            if (data.next && counter < 10) {
+            devCounterSpecies++;
+            if (data.next && devCounterSpecies < 10) {
             // Development mode ^^ to limit API usage
             // if (data.next) {
                 store.dispatch({ 
@@ -200,7 +282,7 @@ function cursiveFetchSpecies(url, store) {
                     } 
                 })
                 cursiveFetchSpecies(data.next, store);    
-            } else if (counter===10) {
+            } else if (devCounterSpecies===10) {
             // Development mode ^^
             // } else {
                 store.dispatch({ 
@@ -217,52 +299,7 @@ function cursiveFetchSpecies(url, store) {
 }
 
 
-function initialize(store) {
 
-    // DEVELOPMENT MODE comment this to avoid bombarding the API endpoint:
-    
-    // fetch("https://pokeapi.co/api/v2/generation/8")
-    // .then(response => response.json())
-    // .then(data => {
-    //     store.dispatch({ type: DATA, payload: { dataType: "Generation8", data } });
-    // })
-
-    
-
-    // fetch("https://pokeapi.co/api/v2/pokemon-color/")
-    // .then(response => response.json())
-    // .then(data => {
-    //     store.dispatch({ type: DATA, payload: { dataType: "Colors", data } });
-    // });
-
-    // fetch("https://pokeapi.co/api/v2/evolution-trigger/")
-    // .then(response => response.json())
-    // .then(data => {
-    //     store.dispatch({ type: DATA, payload: { dataType: "EvolutionTrigger", data } });
-    // })
-
-    // fetch("https://pokeapi.co/api/v2/gender/")
-    // .then(response => response.json())
-    // .then(data => {
-    //     c(data, 'data')
-    //     store.dispatch({ type: DATA, payload: { dataType: "Genders", data } });
-    // })
-
-    // fetch("https://pokeapi.co/api/v2/location-area/")
-    // .then(response => response.json())
-    // .then(data => {
-    //     store.dispatch({ type: DATA, payload: { dataType: "LocationAreas", data } });
-    // })
-
-    // cursiveFetchLocations("https://pokeapi.co/api/v2/location/", store);
-    // cursiveFetchMoves("https://pokeapi.co/api/v2/move/", store);
-
-
-
-    cursiveFetchAbilities("https://pokeapi.co/api/v2/ability", store);
-    // cursiveFetchEvolutionChains("https://pokeapi.co/api/v2/evolution-chain/", store);
-    // cursiveFetchSpecies("https://pokeapi.co/api/v2/pokemon-species", store);
-}
 
 
 

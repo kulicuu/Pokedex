@@ -5,15 +5,16 @@
 
 
 
-.Abilities {
+.Moves {
     display: flex;
     flex-direction: column;
     background-color: ivory;
     margin-top: 10%;
+    margin-left: 10%;
     width: 300px;
     height: 300px;
 }
 
-.Abilities input {
+.Moves input {
     height: 30px;
 }

@@ -37,43 +37,43 @@ effectsArq.INITIALIZE = function (effect, store) {
 
     // DEVELOPMENT MODE comment this to avoid bombarding the API endpoint:
     
-    fetch("https://pokeapi.co/api/v2/generation/8")
-    .then(response => response.json())
-    .then(data => {
-        store.dispatch({ type: DATA, payload: { dataType: "Generation8", data } });
-    })
+    // fetch("https://pokeapi.co/api/v2/generation/8")
+    // .then(response => response.json())
+    // .then(data => {
+    //     store.dispatch({ type: DATA, payload: { dataType: "Generation8", data } });
+    // })
 
     
-    fetch("https://pokeapi.co/api/v2/pokemon-color/")
-    .then(response => response.json())
-    .then(data => {
-        store.dispatch({ type: DATA, payload: { dataType: "Colors", data } });
-    });
+    // fetch("https://pokeapi.co/api/v2/pokemon-color/")
+    // .then(response => response.json())
+    // .then(data => {
+    //     store.dispatch({ type: DATA, payload: { dataType: "Colors", data } });
+    // });
 
-    fetch("https://pokeapi.co/api/v2/evolution-trigger/")
-    .then(response => response.json())
-    .then(data => {
-        store.dispatch({ type: DATA, payload: { dataType: "EvolutionTrigger", data } });
-    })
+    // fetch("https://pokeapi.co/api/v2/evolution-trigger/")
+    // .then(response => response.json())
+    // .then(data => {
+    //     store.dispatch({ type: DATA, payload: { dataType: "EvolutionTrigger", data } });
+    // })
 
-    fetch("https://pokeapi.co/api/v2/gender/")
-    .then(response => response.json())
-    .then(data => {
-        // c(data, 'data')
-        store.dispatch({ type: DATA, payload: { dataType: "Genders", data } });
-    })
+    // fetch("https://pokeapi.co/api/v2/gender/")
+    // .then(response => response.json())
+    // .then(data => {
+    //     // c(data, 'data')
+    //     store.dispatch({ type: DATA, payload: { dataType: "Genders", data } });
+    // })
 
-    fetch("https://pokeapi.co/api/v2/location-area/")
-    .then(response => response.json())
-    .then(data => {
-        store.dispatch({ type: DATA, payload: { dataType: "LocationAreas", data } });
-    })
+    // fetch("https://pokeapi.co/api/v2/location-area/")
+    // .then(response => response.json())
+    // .then(data => {
+    //     store.dispatch({ type: DATA, payload: { dataType: "LocationAreas", data } });
+    // })
 
-    cursiveFetchLocations("https://pokeapi.co/api/v2/location/", store);
-    cursiveFetchMoves("https://pokeapi.co/api/v2/move/", store);
+    // cursiveFetchLocations("https://pokeapi.co/api/v2/location/", store);
+    // cursiveFetchMoves("https://pokeapi.co/api/v2/move/", store);
 
-    cursiveFetchAbilities("https://pokeapi.co/api/v2/ability", store);
-    cursiveFetchEvolutionChains("https://pokeapi.co/api/v2/evolution-chain/", store);
+    // cursiveFetchAbilities("https://pokeapi.co/api/v2/ability", store);
+    // cursiveFetchEvolutionChains("https://pokeapi.co/api/v2/evolution-chain/", store);
     cursiveFetchSpecies("https://pokeapi.co/api/v2/pokemon-species", store);
 
 };
@@ -269,10 +269,10 @@ function cursiveFetchSpecies(url, store) {
             })
         }))
         .then((arq) => {
-            // devCounterSpecies++;
-            // if (data.next && devCounterSpecies < 10) {
+            devCounterSpecies++;
+            if (data.next && devCounterSpecies < 10) {
             // Development mode ^^ to limit API usage
-            if (data.next) {
+            // if (data.next) {
                 store.dispatch({ 
                     type: DATA, 
                     payload: { 
@@ -282,9 +282,9 @@ function cursiveFetchSpecies(url, store) {
                     } 
                 })
                 cursiveFetchSpecies(data.next, store);    
-            // } else if (devCounterSpecies===10) {
+            } else if (devCounterSpecies===10) {
             // Development mode ^^
-            } else {
+            // } else {
                 store.dispatch({ 
                     type: DATA, 
                     payload: { 

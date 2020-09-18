@@ -1,0 +1,28 @@
+
+
+
+
+.Species {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    background-color: ivory;
+    margin-top: 40%;
+    width: 600px;
+    height: 600px;
+}
+
+
+.Species input {
+    height: 30px;
+    text-align: center;
+}
+
+.Card {
+    width: 70px;
+    height: 30px;
+    background-color: snow;
+
+}

@@ -1,6 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import './Species.css'
+import './Species.css';
+import Card from './Card';
+import UmbraCard from './UmbraCard';
 
 const c = console.log.bind(console);
 const _ = require('lodash');
@@ -31,7 +33,8 @@ class Species extends React.Component {
         let filterTreeLoading = this.props.filterTree === undefined;
         return (
             <div className="Species">
-                <input 
+                <p> Species </p>
+                <input
                     disabled={filterTreeLoading}
                     type="text"
                     placeholder="Species"
@@ -41,11 +44,29 @@ class Species extends React.Component {
                         })
                     }}
                 />
-                <ul>
-                    {this.state.filteredSpecies.map((specie, idx) => {
-                        return <li key={`filteredSpecies:${idx}`}> {specie} </li>
-                    })}
-                </ul>
+                
+               {                    
+                filterTreeLoading?
+                    Object.keys(this.props).map((specie, idx) => {
+                        if (specie !== 'filterTree' && specie !=='className') {
+                            return <UmbraCard
+                                key={`umbraSpecies:${idx}`}
+                                specie={specie}
+                                idx={idx}
+                            />
+                        } else { return false }
+
+                    })
+                :
+                    this.state.filteredSpecies.map((specie, idx) => {
+                        return <Card 
+                            key={`filteredSpecies:${idx}`}
+                            specie={specie}
+                        />
+                    })
+                }
+
+                
             </div>
         )
     }

@@ -6,3 +6,15 @@
     align-items: center;
     justify-content: center;
 }
+
+input {
+    min-height: 1.7vh;
+    text-align: center;
+    border-radius: 2px;
+    margin: 1vh;
+    font-size: 1.2vh;
+}
+
+.Btn-group {
+    margin: 2vh;
+}

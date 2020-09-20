@@ -18,17 +18,29 @@ class Species extends React.Component {
         return (
             <div className='Species'>
                 <h2> Species </h2>
+
                 <input 
                     className= 'form-control'
                     type= 'text'
-                    placeholder='species'
+                    placeholder='Search Species...'
                     onChange= { (e) => {
                         this.props.filterAttribute(e.target.value, 'species')
                     }}
                 />
 
+                { this.state.selectedSpecies 
+                    ? 
+                    <Card
+                        attributeType='species'
+                        attributeKey={this.state.selectedSpecies}
+
+                    />
+                    : 
+                    null
+                }
+
                 <div
-                    className='btn-group' role='group'
+                    className='btn-group Btn-group' role='group'
                 >
                     { Object.keys(this.props).map((key, idx) => {
                         if (key !=='filterAttribute' && key !== 'getDetails') return <button
@@ -57,16 +69,7 @@ class Species extends React.Component {
                     }) }
                 </div>
 
-                { this.state.selectedSpecies 
-                    ? 
-                    <Card
-                        attributeType='species'
-                        attributeKey={this.state.selectedSpecies}
 
-                    />
-                    : 
-                    null
-                }
 
             </div>
         )

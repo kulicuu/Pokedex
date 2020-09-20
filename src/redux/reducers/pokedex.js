@@ -4,6 +4,20 @@ import { POKEDEX_CRITERIA, SET_FILTER, INITIALIZE, ACK_EFFECT, DATA, AUTOCOMPLET
 const _ = require('lodash');
 const c = console.log.bind(console);
 const initialState = {
+    images: {
+        attributes: {},
+        abilities: {},
+        locations: {},
+        species: {},
+        moves: {}
+    },
+    details: {
+        attributes: {},
+        abilities: {},
+        locations: {},
+        species: {},
+        moves: {}
+    },
     filterTrees: {},
         attributes: {
         abilities: {},
@@ -21,6 +35,52 @@ const initialState = {
 
 
 const reducerArq = {};
+
+reducerArq.focusImage = function(state, action, effectsQueue) {
+    let { imgSrc, attributeType, attributeKey } = action.payload;
+    return {
+        ...state,
+        images: {
+            ...state.images,
+            [attributeType]: {
+                ...state.images[attributeType],
+                [attributeKey]: imgSrc
+            }
+        }
+    }
+}
+
+
+reducerArq.detailsResponse = function(state, action, effectsQueue) {
+    let { data, attributeKey, attributeType } = action.payload;
+    return {
+        ...state,
+        details: {
+            ...state.details,
+            [attributeType]: {
+                ...state.details[attributeType],
+                [attributeKey]: data
+            }
+        }
+    }
+}
+
+
+reducerArq.getDetails = function(state, action, effectsQueue) {
+    let { attributeType, attributeKey, uri } = action.payload;
+    effectsQueue.push({
+        type: 'getDetails',
+        payload: {
+            attributeType,
+            attributeKey,
+            uri
+        }
+    })
+    return {
+        ...state,
+        detailedSpeciesFocus: 'loading'
+    }
+}
 
 
 reducerArq.filterAttribute = function(state, action, effectsQueue) {

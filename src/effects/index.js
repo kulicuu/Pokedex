@@ -12,11 +12,33 @@ const c = console.log.bind(console);
 const effectsArq = {};
 
 
+effectsArq.getDetails = function (effect, store) {
+    let { attributeKey, attributeType, uri } = effect.payload;
+    fetch(uri)
+    .then(response => response.json())
+    .then(data => {
+        // c(data)
+        store.dispatch({
+            type: 'detailsResponse',
+            payload: { data, attributeType, attributeKey }
+        })
+        fetch(data.sprites.front_default)
+        .then(response => response.blob())
+        .then(images => {
+            let imgSrc = URL.createObjectURL(images)
+            store.dispatch({
+                type: 'focusImage',
+                payload: { attributeType, attributeKey, imgSrc }
+            })
+
+        })
+    })
+}
 
 
 effectsArq.AUTOCOMPLETE_GENERATE = function (effect, store) {
     let { type, payload } = effect;
-    c('payload in effect', payload)
+    // c('payload in effect', payload)
     if (window.Worker) {
         acgw.onmessage = (e) => {
             let { type, payload } = e.data;

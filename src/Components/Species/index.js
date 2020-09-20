@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import './Species.css';
-
+import Card from './Card';
 const c = console.log.bind(console);
 const _ = require('lodash');
 
@@ -9,7 +9,9 @@ const _ = require('lodash');
 class Species extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {}
+        this.state = {
+            selectedSpecies: null
+        }
     }
 
     render() {
@@ -28,13 +30,43 @@ class Species extends React.Component {
                     className='btn-group' role='group'
                 >
                     { Object.keys(this.props).map((key, idx) => {
-                        return <button
+                        if (key !=='filterAttribute' && key !== 'getDetails') return <button
+                            className='btn btn-secondary'
                             key={`species:${idx}`}
-                        >
-                            {key}
-                        </button>
+                            onClick={() => {
+                                let selected = this.props[key];
+                                this.setState({ selectedSpecies: key })
+                                if (selected.pokemon) {
+                                    this.props.getDetails({
+                                        attributeKey: key,
+                                        uri: selected.pokemon.url
+                                    })
+                                } else if (selected.varieties) {
+                                    this.props.getDetails({
+                                        attributeKey: key,
+                                        uri: selected.varieties[0].pokemon.url
+                                    })
+                                } else {
+                                    c('error')
+                                } 
+                            }}
+                            >
+                                {key}
+                            </button>
                     }) }
                 </div>
+
+                { this.state.selectedSpecies 
+                    ? 
+                    <Card
+                        attributeType='species'
+                        attributeKey={this.state.selectedSpecies}
+
+                    />
+                    : 
+                    null
+                }
+
             </div>
         )
     }
@@ -65,6 +97,17 @@ function mapDispatchToProps(dispatch) {
 
 
     return {
+        getDetails: ({attributeKey, uri}) => {
+            c(uri, 'uri')
+            dispatch({
+                type: 'getDetails',
+                payload: {
+                    attributeType: 'species',
+                    attributeKey,
+                    uri
+                }
+            })
+        },
         filterAttribute: (prefix, attributeType) => {
             dispatch({
                 type: 'filterAttribute', 
@@ -73,7 +116,6 @@ function mapDispatchToProps(dispatch) {
         }
     }
 }
-
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(Species);

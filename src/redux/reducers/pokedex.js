@@ -1,38 +1,50 @@
 
 
 import { POKEDEX_CRITERIA, SET_FILTER, INITIALIZE, ACK_EFFECT, DATA, AUTOCOMPLETE_GENERATE } from "../actionTypes";
+const _ = require('lodash');
 const c = console.log.bind(console);
 const initialState = {
-  allIds: [],
-  byIds: {},
-  species: {},
-  locations: {},
-  species: {},
-  filterTrees: {},
-  locationAreas: {},
-  moves: {},
-  abilities: {},
+    filterTrees: {},
+        attributes: {
+        abilities: {},
+        locations: {},
+        species: {},
+        moves: {},
+    },
+    filteredAttributes: {
+        abilities: [],
+        locations: [],
+        species: [],
+        moves: []
+    }
 };
 
 
 const reducerArq = {};
 
 
-const kludgeMap = {
-    Species: 'species',
-    Abilities: 'abilities',
-    Moves: 'moves'
+reducerArq.filterAttribute = function(state, action, effectsQueue) {
+    let { attributeType, prefix } = action.payload;
+    if (state.filterTrees[attributeType]) {
+        let filteredAtts = searchPrefixTree(prefix, state.filterTrees[attributeType]);
+        return {
+            ...state,
+            filteredAttributes: {
+                ...state.filteredAttributes,
+                [attributeType]: filteredAtts
+            }
+        }
+    } else {
+        return state
+    }
 }
 
 
 reducerArq.treeBuildComplete = function(state, action, effectsQueue) {
     c("in treeBuildComplete with action", action.payload);
     let {dataType, tree} = action.payload;
-    // state[`filterTrees:${dataType}`] = tree;
-    // c('state', state)
-    // return state
-
-
+    // TODO: change dataType to attributeType for consistency, and get rid of the capitalized
+    // attributeType and kludgeMap.
     return {
         ...state,
         filterTrees: {
@@ -58,7 +70,7 @@ reducerArq.DATA = function(state, action, effectsQueue) {
                 type: 'autocompleteTreeBuild',
                 payload: {
                     dataType,
-                    data: state[kludgeMap[dataType]]
+                    data: state[dataType]
                 }
             }
         })
@@ -85,44 +97,45 @@ function processInitialData(payload, state) {
     let data = payload.data;
     let dataType = payload.dataType;
     switch (dataType) {
-        case "Species": {
+        // TODO change to attributeType lowercased for consistency, also , 
+        case "species": {
             let species = data.reduce((acc, value, id) => {
                 acc[value.name] = value;
                 return acc
-            }, state.species);
+            }, state.attributes.species);
             return {
                 ...state,
                 species
             }  
         }
-        case "Abilities": {
+        case "abilities": {
             let { data, dataType } = payload;
             let abilities = data.reduce((acc, value, id) => {
                 acc[value.name] = value;
                 return acc
-            }, state.abilities);
+            }, state.attributes.abilities);
             return {
                 ...state,
                 abilities
             }
         }
-        case "Locations": {
+        case "locations": {
             let { data, dataType } = payload;
             let locations = data.reduce((acc, value, id) => {
                 acc[value.name] = value;
                 return acc
-            }, state.locations);
+            }, state.attributes.locations);
             return {
                 ...state,
                 locations
             }
         }
-        case "Moves": {
+        case "moves": {
             let { data, dataType } = payload;
             let moves = data.reduce((acc, value, id) => {
                 acc[value.name] = value;
                 return acc
-            }, state.moves);
+            }, state.attributes.moves);
             return {
                 ...state,
                 moves
@@ -139,12 +152,12 @@ function processInitialData(payload, state) {
         //         locationAreas
         //     }
         // }
-        case "Locations": {
+        case "locations": {
             let { data, dataType } = payload;
             let locations = data.reduce((acc, value, id) => {
                 acc[value.name] = value;
                 return acc
-            }, state.locations);
+            }, state.attributes.locations);
             return {
                 ...state,
                 locations
@@ -153,4 +166,39 @@ function processInitialData(payload, state) {
         default:
             return state;
     }
+}
+
+
+function searchPrefixTree(prefix, filterTree) {
+    if (prefix.length === 0) {
+        return []
+    } else {
+        let cursor = filterTree;
+        let cancelled = false;
+        if (cursor) {
+            let prefixRayy = prefix.split('')
+            for (let idx = 0; idx < prefixRayy.length; idx++) {
+                let char = prefixRayy[idx];
+                if ((cursor.chdNodes)[char]) {
+                    cursor = cursor.chdNodes[char];
+                } else {
+                    cancelled = true;
+                    return []
+                }
+            }
+            if (cancelled === false) {
+                return reduceTree([], cursor);
+            }
+        }
+    }
+}
+
+
+function reduceTree(acc, tree) {
+    if (acc.indexOf(tree.matchWord) === -1) {
+        acc = [].concat(acc, tree.matchWord);
+    }
+    return _.reduce(tree.chdNodes, (acc2, node, prefix) => {
+        return reduceTree(acc2, node)
+    }, acc);
 }

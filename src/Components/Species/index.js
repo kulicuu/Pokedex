@@ -1,57 +1,39 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import './Species.css';
-import Card from './Card';
-import UmbraCard from './UmbraCard';
-import UmbraSet from './UmbraSet';
 
 const c = console.log.bind(console);
 const _ = require('lodash');
 
 
-
 class Species extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            filteredSpecies: []
-        }
+        this.state = {}
     }
 
     render() {
-        let filterTreeLoading = this.props.filterTree === undefined;
         return (
-            <div className="Species">
-                <div className='ContainerFour'>
-                <p> Species </p>
-                <div className='ContainerThree'>
-                    <UmbraSet/>
-                    <div className='inputContainer'>
-                        <input
-                            disabled={filterTreeLoading}
-                            type="text"
-                            placeholder="Species"
-                            onChange= {(e) => {
-                                this.setState({
-                                    filteredSpecies: searchPrefixTree(e.target.value, this.props.filterTree)
-                                })
-                            }}
-                        />
-                    </div>
+            <div>
+                <input 
+                    className= 'form-control'
+                    type= 'text'
+                    placeholder='species'
+                    onChange= { (e) => {
+                        this.props.filterAttribute(e.target.value, 'species')
+                    }}
+                />
 
-                </div>  
-
-                   {                    
-                    filterTreeLoading?
-                        false
-                    :
-                        this.state.filteredSpecies.map((specie, idx) => {
-                            return <Card 
-                                key={`filteredSpecies:${idx}`}
-                                specie={specie}
-                            />
-                        })
-                    }   
+                <div
+                    className='btn-group' role='group'
+                >
+                    { Object.keys(this.props).map((key, idx) => {
+                        return <button
+                            key={`species:${idx}`}
+                        >
+                            {key}
+                        </button>
+                    }) }
                 </div>
             </div>
         )
@@ -59,50 +41,39 @@ class Species extends React.Component {
 }
 
 
-function mapStateToProps(state) {
 
-    return  {filterTree: state.pokedex.filterTrees.Species }
+function mapStateToProps(state) {
+    let species = state.pokedex.species;
+    let filteredAttributes = state.pokedex.filteredAttributes.species;
+    if (species === undefined) {
+        return {}   
+    } else if (filteredAttributes.length === 0) {
+        return Object.keys(species).reduce((acc, key, idx) => {
+        acc[key] = species[key];
+        return acc
+        }, {});
+    } else {
+        return filteredAttributes.reduce((acc, key, idx) => {
+            acc[key] = species[key];
+            return acc
+        }, {});
+    }
 }
 
 
 function mapDispatchToProps(dispatch) {
-    return {}
-}
 
 
-function reduceTree(acc, tree) {
-    if (acc.indexOf(tree.matchWord) === -1) {
-        acc = [].concat(acc, tree.matchWord);
-    }
-    return _.reduce(tree.chdNodes, (acc2, node, prefix) => {
-        return reduceTree(acc2, node)
-    }, acc);
-}
-
-
-function searchPrefixTree(prefix, filterTree) {
-    if (prefix.length === 0) {
-        return []
-    } else {
-        let cursor = filterTree;
-        let cancelled = false;
-        if (cursor) {
-            let prefixRayy = prefix.split('')
-            for (let idx = 0; idx < prefixRayy.length; idx++) {
-                let char = prefixRayy[idx];
-                if ((cursor.chdNodes)[char]) {
-                    cursor = cursor.chdNodes[char];
-                } else {
-                    cancelled = true;
-                    return []
-                }
-            }
-            if (cancelled === false) {
-                return reduceTree([], cursor);
-            }
+    return {
+        filterAttribute: (prefix, attributeType) => {
+            dispatch({
+                type: 'filterAttribute', 
+                payload: { attributeType, prefix }
+            })
         }
     }
 }
+
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(Species);

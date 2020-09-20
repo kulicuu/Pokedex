@@ -139,7 +139,7 @@ function cursiveFetchAbilities(url, store) {
                 store.dispatch({
                     type: DATA,
                     payload: {
-                        dataType: "Abilities",
+                        dataType: "abilities",
                         finished: false,
                         data: arq
                     }
@@ -149,7 +149,7 @@ function cursiveFetchAbilities(url, store) {
                 store.dispatch({
                     type: DATA,
                     payload: {
-                        dataType: "Abilities",
+                        dataType: "abilities",
                         finished: true,
                         data: arq
                     }
@@ -172,7 +172,7 @@ function cursiveFetchEvolutionChains(url, store) {
             })
         }))
         .then((arq) => {
-            store.dispatch({ type: DATA, payload: { dataType: "EvolutionChains", data: arq } })
+            store.dispatch({ type: DATA, payload: { dataType: "vvolutionChains", data: arq } })
         })
         if (data.next) cursiveFetchEvolutionChains(data.next, store);
     })
@@ -195,7 +195,7 @@ function cursiveFetchLocations(url, store) {
                 store.dispatch({
                     type: DATA,
                     payload: {
-                        dataType: "Locations",
+                        dataType: "locations",
                         finished: false,
                         data: arq
                     }
@@ -205,7 +205,7 @@ function cursiveFetchLocations(url, store) {
                 store.dispatch({
                     type: DATA,
                     payload: {
-                        dataType: "Locations",
+                        dataType: "locations",
                         finished: true,
                         data: arq
                     }
@@ -235,7 +235,7 @@ function cursiveFetchMoves(url, store) {
                 store.dispatch({
                     type: DATA,
                     payload: {
-                        dataType: "Moves",
+                        dataType: "moves",
                         finished: false,
                         data: arq
                     }
@@ -246,7 +246,7 @@ function cursiveFetchMoves(url, store) {
                 store.dispatch({
                     type: DATA,
                     payload: {
-                        dataType: "Moves",
+                        dataType: "moves",
                         finished: true,
                         data: arq
                     }
@@ -256,7 +256,7 @@ function cursiveFetchMoves(url, store) {
     })
 }
 
-var devCounterSpecies = 0;
+// var devCounterSpecies = 0;
 function cursiveFetchSpecies(url, store) {
     fetch(url)
     .then(response => response.json())
@@ -269,26 +269,27 @@ function cursiveFetchSpecies(url, store) {
             })
         }))
         .then((arq) => {
-            devCounterSpecies++;
-            if (data.next && devCounterSpecies < 10) {
+            // c('????')
+            // devCounterSpecies++;
+            // if (data.next && devCounterSpecies < 10) {
             // Development mode ^^ to limit API usage
-            // if (data.next) {
+            if (data.next) {
                 store.dispatch({ 
                     type: DATA, 
                     payload: { 
-                        dataType: "Species",
+                        dataType: "species",
                         finished: false,
                         data: arq 
                     } 
                 })
                 cursiveFetchSpecies(data.next, store);    
-            } else if (devCounterSpecies===10) {
+            // } else if (devCounterSpecies===10) {
             // Development mode ^^
-            // } else {
+            } else {
                 store.dispatch({ 
                     type: DATA, 
                     payload: { 
-                        dataType: "Species",
+                        dataType: "species",
                         finished: true,
                         data: arq 
                     } 

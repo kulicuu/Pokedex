@@ -97,3 +97,31 @@ This doesn't appear to be independently variable of Species.
 
 #### Species
 The specification doesn't call for a Species variable, but given the Varieties requirement, which is not satisfied by an API endpoint, this would be a sensible addition.
+
+
+
+
+
+
+
+
+
+
+
+
+
+____________________________________________________
+
+
+
+### Layout scratchnotes:
+
+
+For the species search by species:
+
+We have a text input, an array of buttons enumerating all of the species, which is reduced by search results.
+
+We need separate container components for the entire list of species vs the filterTree.
+
+
+It might be more elegant to just keep the filterTree and the total list in the store, just pass as props what needs to be shown.

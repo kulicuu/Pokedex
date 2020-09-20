@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-
+import './Card.css';
 
 const c = console.log.bind(console);
 // const _ = require('lodash');
@@ -16,11 +16,10 @@ class Card extends React.Component {
     }
 
     render() {
-
+        // this.props.details ? c(this.props.details) : c('none')
         return (
             <div
-                className='card'
-                style={{ width: '18rem'}}                    
+                className='card Card'                  
             >
                 <img
                     src={this.props.imgSrc}
@@ -29,7 +28,12 @@ class Card extends React.Component {
                 <div
                     className='card-body'
                 >
-                    { this.props.attributeKey }
+                    <h5 className='card-title'>
+                        { this.props.attributeKey }
+                    </h5>
+                    <p className='card-text'>
+                        { this.props.attributeKey }
+                    </p>
                 </div>
             </div>
         )

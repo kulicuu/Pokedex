@@ -16,7 +16,8 @@ class Species extends React.Component {
 
     render() {
         return (
-            <div>
+            <div className='Species'>
+                <h2> Species </h2>
                 <input 
                     className= 'form-control'
                     type= 'text'

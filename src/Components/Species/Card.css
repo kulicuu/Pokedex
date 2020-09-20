@@ -1,0 +1,12 @@
+.Card {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    align-self: center;
+    width: 18rem;
+    border: 1px solid magenta;
+    border-radius: 2px;
+    background-color: ivory;
+}

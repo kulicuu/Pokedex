@@ -19,13 +19,16 @@ class Pokedex extends React.Component {
         this.state = {}
     }
 
-
     render() {
         return (
+            <div className="container Pokedex">
+                <h1 className='Pokedex-header'> Pokedex </h1>
+                <div className="container Attributes-container">
 
-                <div className="container">
+                    <Species/>
                     <Species/>
                 </div>
+            </div>
 
         )
     }

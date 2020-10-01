@@ -94,7 +94,7 @@ effectsArq.INITIALIZE = function (effect, store) {
     // cursiveFetchLocations("https://pokeapi.co/api/v2/location/", store);
     // cursiveFetchMoves("https://pokeapi.co/api/v2/move/", store);
 
-    // cursiveFetchAbilities("https://pokeapi.co/api/v2/ability", store);
+    cursiveFetchAbilities("https://pokeapi.co/api/v2/ability", store);
     // cursiveFetchEvolutionChains("https://pokeapi.co/api/v2/evolution-chain/", store);
     cursiveFetchSpecies("https://pokeapi.co/api/v2/pokemon-species", store);
 

@@ -5,7 +5,7 @@ import logo from './logo.svg'
 import { connect } from 'react-redux';
 import Species from './Components/Species/';
 import Locations from './Components/Locations';
-import Abilities from './Components/Abilities';
+import Abilities from './Components/Abilities/';
 import Moves from './Components/Moves';
 import './Pokedex.css';
 
@@ -26,7 +26,7 @@ class Pokedex extends React.Component {
                 <div className="container Attributes-container">
 
                     <Species/>
-                    {/*<Species/>*/}
+                    <Abilities/>
                 </div>
             </div>
 

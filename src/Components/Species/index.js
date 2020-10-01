@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import './Species.css';
 import Card from './Card';
+import Tiles from './Tiles';
 const c = console.log.bind(console);
 const _ = require('lodash');
 
@@ -18,59 +19,35 @@ class Species extends React.Component {
         return (
             <div className='Species'>
                 <h2> Species </h2>
+                {this.props.filterReady ?
+                    <input
+                        disabled={!this.props.filterReady}
+                        className= 'form-control'
+                        type= 'text'
+                        placeholder='Search Species...'
+                        onChange= { (e) => {
+                            this.props.filterAttribute(e.target.value, 'species')
+                        }}
+                    />
+                : <p>Search Tree Loading...</p>
+                }
 
-                <input 
-                    className= 'form-control'
-                    type= 'text'
-                    placeholder='Search Species...'
-                    onChange= { (e) => {
-                        this.props.filterAttribute(e.target.value, 'species')
-                    }}
-                />
-
-                { this.state.selectedSpecies 
+                { this.props.selectedSpecies 
                     ? 
                     <Card
                         attributeType='species'
-                        attributeKey={this.state.selectedSpecies}
+                        attributeKey={this.props.selectedSpecies}
 
                     />
                     : 
                     null
                 }
-
                 <div
                     className='btn-group Btn-group' role='group'
                 >
-                    { Object.keys(this.props).map((key, idx) => {
-                        if (key !=='filterAttribute' && key !== 'getDetails') return <button
-                            className='btn btn-secondary'
-                            key={`species:${idx}`}
-                            onClick={() => {
-                                let selected = this.props[key];
-                                this.setState({ selectedSpecies: key })
-                                if (selected.pokemon) {
-                                    this.props.getDetails({
-                                        attributeKey: key,
-                                        uri: selected.pokemon.url
-                                    })
-                                } else if (selected.varieties) {
-                                    this.props.getDetails({
-                                        attributeKey: key,
-                                        uri: selected.varieties[0].pokemon.url
-                                    })
-                                } else {
-                                    c('error')
-                                } 
-                            }}
-                            >
-                                {key}
-                            </button>
-                    }) }
+                    <Tiles/>
+
                 </div>
-
-
-
             </div>
         )
     }
@@ -79,20 +56,21 @@ class Species extends React.Component {
 
 
 function mapStateToProps(state) {
-    let species = state.pokedex.species;
+    let filterReady = state.pokedex.filterTrees.species ? true : false;
+    let { selectedSpecies, species } = state.pokedex;
     let filteredAttributes = state.pokedex.filteredAttributes.species;
     if (species === undefined) {
-        return {}   
+        return { selectedSpecies, filterReady }   
     } else if (filteredAttributes.length === 0) {
         return Object.keys(species).reduce((acc, key, idx) => {
         acc[key] = species[key];
         return acc
-        }, {});
+        }, { selectedSpecies, filterReady });
     } else {
         return filteredAttributes.reduce((acc, key, idx) => {
             acc[key] = species[key];
             return acc
-        }, {});
+        }, { selectedSpecies, filterReady });
     }
 }
 

@@ -4,6 +4,7 @@ import { POKEDEX_CRITERIA, SET_FILTER, INITIALIZE, ACK_EFFECT, DATA, AUTOCOMPLET
 const _ = require('lodash');
 const c = console.log.bind(console);
 const initialState = {
+    selectedSpecies: null,
     images: {
         attributes: {},
         abilities: {},
@@ -35,6 +36,16 @@ const initialState = {
 
 
 const reducerArq = {};
+
+
+
+reducerArq.setSelectedSpecies = function(state, action, effectsQueue) {
+    let { speciesName } = action.payload;
+    return {
+        ...state,
+        selectedSpecies: speciesName
+    }
+}
 
 reducerArq.focusImage = function(state, action, effectsQueue) {
     let { imgSrc, attributeType, attributeKey } = action.payload;

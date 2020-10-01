@@ -26,7 +26,7 @@ class Pokedex extends React.Component {
                 <div className="container Attributes-container">
 
                     <Species/>
-                    <Species/>
+                    {/*<Species/>*/}
                 </div>
             </div>
 

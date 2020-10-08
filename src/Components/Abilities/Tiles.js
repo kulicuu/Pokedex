@@ -34,8 +34,6 @@ class Tiles extends React.Component {
 
 function mapStateToProps(state) {
     let abilities = state.pokedex.abilities;
-    // abilities ? c(abilities) : null;
-    c(abilities)
     let filteredAttributes = state.pokedex.filteredAttributes.abilities;
     if (abilities === undefined) {
         return {}   

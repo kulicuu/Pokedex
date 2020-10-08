@@ -29,7 +29,7 @@ class Species extends React.Component {
                             this.props.filterAttribute(e.target.value, 'species')
                         }}
                     />
-                : <p>Search Tree Loading...</p>
+                : <p>Search-tree loading...</p>
                 }
 
                 { this.props.selectedSpecies 

@@ -38,6 +38,15 @@ const initialState = {
 const reducerArq = {};
 
 
+reducerArq.setSelectedAbility = function(state, action, effectsQueue) {
+    let { abilityName } = action.payload;
+    return {
+        ...state,
+        selectedAbility: abilityName
+    }
+}
+
+
 
 reducerArq.setSelectedSpecies = function(state, action, effectsQueue) {
     let { speciesName } = action.payload;

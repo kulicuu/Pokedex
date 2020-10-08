@@ -21,19 +21,7 @@ class Tile extends React.Component {
                 onClick={() => {
                     this.props.setSelectedAbility(abilityName)
                     let selected = this.props.ability;
-                    if (selected.pokemon) {
-                        this.props.getDetails({
-                            attributeKey: abilityName,
-                            uri: selected.pokemon.url
-                        })
-                    } else if (selected.varieties) {
-                        this.props.getDetails({
-                            attributeKey: abilityName,
-                            uri: selected.varieties[0].pokemon.url
-                        })
-                    } else {
-                        c('error')
-                    }
+
                 }}
                 >
                     {abilityName}

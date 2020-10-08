@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 
 import Tiles from './Tiles';
+import Card from './Card';
 
 const c = console.log.bind(console);
 
@@ -15,6 +16,7 @@ class Abilities extends React.Component {
     }
 
     render() {
+        c(this.props.selectedAbility, 'selectedAbility')
         return (
 
             <div>
@@ -30,7 +32,15 @@ class Abilities extends React.Component {
                         }}
                     />
                 : <p> Search-tree loading... </p>
-
+                }
+                { this.props.selectedAbility 
+                    ?
+                    <Card
+                        attributeType='ability'
+                        attributeKey={this.props.selectedAbility}
+                    />
+                    :
+                    null
                 }
 
                 <Tiles/>
